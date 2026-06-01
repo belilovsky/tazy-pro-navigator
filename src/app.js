@@ -32,6 +32,7 @@ const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 const fmt = new Intl.NumberFormat('ru-RU');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function escapeHtml(value) {
   return String(value)
@@ -69,6 +70,13 @@ function activeAudience() {
 
 function activeStage() {
   return stageTabs.find((item) => item.id === state.stage) ?? stageTabs[0];
+}
+
+function ensureStageModule() {
+  const stage = activeStage();
+  if (!stage.modules.includes(state.module)) {
+    [state.module] = stage.modules;
+  }
 }
 
 function getModule(id = state.module) {
@@ -275,6 +283,8 @@ function renderModuleHotspots() {
         type="button"
         style="left:${item.position[0]}%; top:${item.position[1]}%;"
         data-module="${item.id}"
+        aria-label="${escapeHtml(item.id)}: ${escapeHtml(item.name)}"
+        ${isAvailable ? '' : 'disabled'}
         ${disabled}
       >
         ${escapeHtml(item.id)}
@@ -670,7 +680,10 @@ function bindEvents() {
   document.addEventListener('click', (event) => {
     const scrollButton = event.target.closest('[data-scroll-target]');
     if (scrollButton) {
-      $(`#${scrollButton.dataset.scrollTarget}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      $(`#${scrollButton.dataset.scrollTarget}`)?.scrollIntoView({
+        behavior: reducedMotion.matches ? 'auto' : 'smooth',
+        block: 'start'
+      });
     }
 
     const audienceButton = event.target.closest('[data-audience]');
@@ -683,13 +696,16 @@ function bindEvents() {
     const stageButton = event.target.closest('[data-stage]');
     if (stageButton) {
       state.stage = stageButton.dataset.stage;
+      ensureStageModule();
       renderStageControls();
       renderChain();
       renderModuleHotspots();
+      renderModuleDetail();
     }
 
     const moduleButton = event.target.closest('[data-module]');
     if (moduleButton) {
+      if (moduleButton.disabled || moduleButton.getAttribute('aria-disabled') === 'true') return;
       state.module = moduleButton.dataset.module;
       renderChainModulePreview();
       $$('.chain-chip').forEach((chip) => chip.classList.toggle('is-active', chip.dataset.module === state.module));

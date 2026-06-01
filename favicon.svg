@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="TAZY.PRO">
+  <rect width="64" height="64" rx="14" fill="#0a3d8f"/>
+  <path d="M16 18h32v8H36v25h-8V26H16V18Z" fill="#fff"/>
+  <path d="M42 38h6v13h-6V38Z" fill="#7fb3ff"/>
+  <path d="M16 38h6v13h-6V38Z" fill="#7fb3ff"/>
+</svg>

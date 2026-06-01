@@ -1,9 +1,9 @@
-# Example only. Final domain and auth realm should be set at deploy time.
+# Example only. Use it if tazy.pro must be temporarily closed.
 server {
   listen 443 ssl http2;
-  server_name tazy-pro.example.com;
+  server_name tazy.pro www.tazy.pro;
 
-  root /var/www/tazy-pro-navigator;
+  root /var/www/tazy.pro/current;
   index index.html;
 
   auth_basic "TAZY.PRO Project Navigator";

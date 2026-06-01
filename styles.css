@@ -418,10 +418,10 @@ img {
 }
 
 .hero-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 500px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-height: 0;
   padding: 24px;
 }
 
@@ -434,7 +434,7 @@ img {
 .hero-metrics {
   display: grid;
   gap: 10px;
-  margin-top: 28px;
+  margin-top: 6px;
 }
 
 .hero-metric {
@@ -972,6 +972,10 @@ img {
 .hotspot.is-muted {
   background: #a8b3c4;
   opacity: 0.46;
+}
+
+.hotspot:disabled {
+  cursor: not-allowed;
 }
 
 .detail-panel {
@@ -1751,7 +1755,7 @@ dd {
     margin-bottom: 14px;
   }
 
-  .audience-strip p {
+  .audience-strip > div:first-child p {
     display: none;
   }
 

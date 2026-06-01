@@ -29,7 +29,7 @@ for (const width of widths) {
   await page.goto(target, { waitUntil: 'networkidle' });
   await page.screenshot({ path: `/tmp/tazy-pro-navigator-${width}.png`, fullPage: false });
 
-  await page.locator('[data-stage="stage1"]').evaluate((element) => element.click());
+  await page.locator('[data-stage="stage2"]').evaluate((element) => element.click());
   await page.locator('[data-module="M4"]').first().evaluate((element) => element.click());
   await page.locator('[data-audience="bank"]').evaluate((element) => element.click());
   await page.locator('#finance').scrollIntoViewIfNeeded();

@@ -2,9 +2,18 @@
   "name": "TAZY.PRO Project Navigator",
   "short_name": "TAZY.PRO",
   "description": "Интерактивная инвестиционно-инженерная модель проекта TAZY.PRO.",
-  "start_url": ".",
+  "id": "https://tazy.pro/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f4f7fb",
   "theme_color": "#0a3d8f",
-  "icons": []
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }
