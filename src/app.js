@@ -238,6 +238,7 @@ function renderChain() {
         width="1672"
         height="941"
         loading="lazy"
+        decoding="async"
       >
       <figcaption>Главная производственная модель: клик по модулю ниже открывает инженерную карточку.</figcaption>
     </figure>
@@ -258,6 +259,7 @@ function renderChain() {
         width="1672"
         height="941"
         loading="lazy"
+        decoding="async"
       >
     </details>
   `;
