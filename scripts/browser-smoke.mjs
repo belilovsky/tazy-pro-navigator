@@ -33,6 +33,7 @@ for (const width of widths) {
   await page.locator('[data-module="M4"]').first().evaluate((element) => element.click());
   await page.locator('[data-audience="bank"]').evaluate((element) => element.click());
   await page.locator('#finance').scrollIntoViewIfNeeded();
+  await page.locator('[data-finance-preset="upside"]').evaluate((element) => element.click());
   await page.locator('#carcasses').evaluate((element) => {
     element.value = 28;
     element.dispatchEvent(new Event('input', { bubbles: true }));
@@ -43,6 +44,8 @@ for (const width of widths) {
     scrollWidth: document.documentElement.scrollWidth,
     audience: document.querySelector('#audienceSummary')?.textContent,
     moduleTitle: document.querySelector('#moduleDetail h3')?.textContent,
+    modulePreview: document.querySelector('#chainModulePreview strong')?.textContent,
+    activePreset: document.querySelector('[data-finance-preset].is-active strong')?.textContent,
     capexCard: document.querySelector('#scenarioCards .scenario-card strong')?.textContent
   }));
 

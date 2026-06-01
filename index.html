@@ -48,6 +48,7 @@
             <p id="audienceSummary">Фокус меняет акценты интерфейса без подмены фактов проекта.</p>
           </div>
           <div class="segmented" id="audienceControls" role="tablist" aria-label="Режимы аудитории"></div>
+          <div id="audienceBrief"></div>
         </section>
 
         <section class="hero-grid" id="overview" aria-labelledby="overviewTitle">
@@ -76,6 +77,30 @@
             <h2 id="kpiTitle">Ключевые показатели</h2>
             <div id="kpiCards"></div>
           </aside>
+        </section>
+
+        <section class="section section--logic" id="logic" aria-labelledby="logicTitle">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">02 / Логика сделки</div>
+              <h2 id="logicTitle">Что делает проект финансируемым, а не просто красивой схемой</h2>
+            </div>
+            <p>Этот слой нужен для переговоров: он показывает источники стоимости, условия bankability и критический путь до первого финансирования.</p>
+          </div>
+          <div class="logic-layout">
+            <div>
+              <h3 class="subhead">Инвестиционная формула</h3>
+              <div class="thesis-grid" id="thesisGrid"></div>
+            </div>
+            <div>
+              <h3 class="subhead">Deal-breakers</h3>
+              <div class="deal-breaker-list" id="dealBreakerList"></div>
+            </div>
+          </div>
+          <div class="path-board" aria-labelledby="criticalPathTitle">
+            <h3 class="subhead" id="criticalPathTitle">Критический путь G0–G7</h3>
+            <div class="critical-path" id="criticalPath"></div>
+          </div>
         </section>
 
         <section class="section section--media" id="factory" aria-labelledby="factoryTitle">
@@ -138,11 +163,15 @@
             <p>Это управленческая демо-модель: она показывает чувствительность проекта, но не заменяет ПСД, КП и кредитный пакет.</p>
           </div>
           <div class="finance-grid">
-            <form class="simulator" id="simulator" aria-label="Финансовые параметры проекта"></form>
+            <div class="finance-controls">
+              <div class="preset-list" id="financePresets" aria-label="Готовые финансовые сценарии"></div>
+              <form class="simulator" id="simulator" aria-label="Финансовые параметры проекта"></form>
+            </div>
             <div class="finance-output">
               <div class="scenario-cards" id="scenarioCards"></div>
               <div class="chart-card" id="revenueChart"></div>
               <div class="chart-card" id="cashflowChart"></div>
+              <div class="funding-stack" id="fundingStack" aria-label="Стек финансирования проекта"></div>
             </div>
           </div>
         </section>

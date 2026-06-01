@@ -3,6 +3,8 @@ import {
   documents,
   engineeringSystems,
   financeDefaults,
+  financePresets,
+  fundingStack,
   gates,
   modules,
   navigation,
@@ -54,6 +56,8 @@ if (navigation.length < 10) errors.push('Navigation should cover the full naviga
 if (products.length !== 4) errors.push('Product architecture should expose four core lines');
 if (documents.length !== 10) errors.push('Document room should keep 10 folders from the brief');
 if (gates.length < 5) errors.push('Financing gates are incomplete');
+if (financePresets.length < 3) errors.push('Finance presets should include conservative/base/upside');
+if (fundingStack.length < 4) errors.push('Funding stack should include tranche, CAPEX, Damu/leasing and innovation lanes');
 
 for (const asset of requiredAssets) {
   try {

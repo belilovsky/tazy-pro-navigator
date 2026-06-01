@@ -1,5 +1,6 @@
 export const navigation = [
   ['overview', '01', 'Резюме проекта'],
+  ['logic', '02', 'Логика сделки'],
   ['factory', '03', 'Завод'],
   ['engineering', '04', 'Инженерия'],
   ['equipment', '05', 'Оборудование'],
@@ -18,35 +19,50 @@ export const audiences = [
     label: 'Инвестор',
     focus: 'CAPEX, EBITDA, этапность, риски, окупаемость и масштабирование.',
     primaryMetric: 'Окупаемость полной модели',
-    accent: 'blue'
+    accent: 'blue',
+    checks: ['защита маржи через сырьё', 'этапность CAPEX', 'выход в корма и экспорт'],
+    evidence: ['финмодель', 'гейты G0–G7', 'сырьевой term sheet'],
+    nextAction: 'Проверить сырьевой договор и первый транш 60–70 млн ₸.'
   },
   {
     id: 'bank',
     label: 'Банк / Damu',
     focus: 'Залоговый CAPEX, оборотный капитал, сырьевой договор, vendor quotes и кассовый разрыв.',
     primaryMetric: 'Первый транш',
-    accent: 'violet'
+    accent: 'violet',
+    checks: ['обеспечение и SPV', 'график 30/70', 'DSCR и ликвидность'],
+    evidence: ['3 КП по лотам', 'нулевой транш', 'пакет Damu / лизинг'],
+    nextAction: 'Собрать банковский пакет: КП, ТУ, сырьё, cash-flow и обеспечение.'
   },
   {
     id: 'akimat',
     label: 'Акимат',
     focus: 'Рабочие места, переработка побочного сырья, экология, импортозамещение и экспорт.',
     primaryMetric: 'Локальная добавленная стоимость',
-    accent: 'green'
+    accent: 'green',
+    checks: ['рабочие места', 'экология и запахи', 'локальное производство'],
+    evidence: ['биофильтр', 'ЛОС', 'карта экспортного потенциала'],
+    nextAction: 'Показать проект как промышленный актив региона, а не утилизационный цех.'
   },
   {
     id: 'projector',
     label: 'Проектировщик',
     focus: 'План завода, зоны, потоки, P1–P10, оборудование и технические условия.',
     primaryMetric: 'Готовность ТЗ',
-    accent: 'orange'
+    accent: 'orange',
+    checks: ['санитарное зонирование', 'потоки сырья/персонала', 'мощность сетей'],
+    evidence: ['M0–M16', 'P1–P10', 'список оборудования'],
+    nextAction: 'Уточнить площадку, ТУ и разделить грязную, переходную и чистую зоны.'
   },
   {
     id: 'science',
     label: 'QazInnovations',
     focus: 'Цифровой слой, лаборатория, рецептуры, испытания, данные и НИОКР.',
     primaryMetric: 'Digital moat',
-    accent: 'cyan'
+    accent: 'cyan',
+    checks: ['лабораторные протоколы', 'QR-паспорт', 'обезличенный data loop'],
+    evidence: ['Aw', 'HACCP', 'TAZY.CARE', 'репутационный мониторинг'],
+    nextAction: 'Развести коммерческий pet food и НИОКР-контур, не смешивая данные.'
   }
 ];
 
@@ -56,6 +72,10 @@ export const stageTabs = [
     label: 'Stage 1',
     title: 'Лакомства и жевательные изделия',
     summary: 'Быстрый запуск, высокая маржа, проверка бренда, качества и цифровой прослеживаемости.',
+    output: 'первая коммерческая выручка и подтверждение качества',
+    capex: '32–39 млн ₸',
+    gate: 'G4: пилотная партия + первый транш',
+    risk: 'качество сырья, Aw, упаковка, повторные продажи',
     modules: ['M0', 'M1', 'M2', 'M3', 'L1', 'L2', 'L3', 'L4', 'M10', 'M11', 'M12'],
     color: 'orange'
   },
@@ -64,6 +84,10 @@ export const stageTabs = [
     label: 'Stage 2',
     title: 'Термическая переработка',
     summary: 'Кости и жиросодержащее сырьё превращаются во внутренний ингредиентный контур.',
+    output: 'мясокостный ингредиент и жир для собственных рационов',
+    capex: '≈55 млн ₸',
+    gate: 'G5: запахи, тепло, лаборатория, разделение зон',
+    risk: 'рендеринг нельзя смешивать с лакомствами в одном помещении',
     modules: ['M0', 'M1', 'M4', 'M5', 'M13', 'M14', 'M12'],
     color: 'amber'
   },
@@ -72,6 +96,10 @@ export const stageTabs = [
     label: 'Stage 3',
     title: 'Собственные сухие корма',
     summary: 'Смешивание, экструзия, сушка, покрытие жиром, фасовка и склад готового продукта.',
+    output: 'TAZY Daily / WORK / CARE и масштабирование объёма',
+    capex: '≈75 млн ₸',
+    gate: 'G6: рецептуры, экструзия, стабильная гранула, пакет рынка',
+    risk: 'преждевременная покупка экструдера до подтверждения спроса',
     modules: ['M5', 'M6', 'M7', 'M8', 'M9', 'M10', 'M11', 'M12'],
     color: 'blue'
   },
@@ -80,6 +108,10 @@ export const stageTabs = [
     label: 'Full cycle',
     title: 'Полная вертикальная модель',
     summary: 'Сырьё, лакомства, внутренние ингредиенты, сухой корм, контроль качества и экспорт.',
+    output: 'реплицируемый AgroTech-ПАК глубокой переработки',
+    capex: '≈162 млн ₸',
+    gate: 'G0–G7: сырьё, земля, ТУ, КП, пилот, финансирование, экспорт',
+    risk: 'проект не bankable без сырьевого договора 36–60 месяцев',
     modules: ['M0', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9', 'M10', 'M11', 'M12', 'M13', 'M14', 'M15', 'M16', 'L1', 'L2', 'L3', 'L4'],
     color: 'green'
   }
@@ -90,6 +122,67 @@ export const coreKpis = [
   { id: 'firstAsk', label: 'Первый инвестиционный транш', value: 65, unit: 'млн ₸', note: 'коридор 60–70 млн ₸' },
   { id: 'revenue', label: 'Выручка в устойчивом режиме', value: 321, unit: 'млн ₸/год', note: 'управленческая оценка 3 года' },
   { id: 'payback', label: 'Окупаемость полной модели', value: '3,3–3,8', unit: 'года', note: 'после подтверждения сырья' }
+];
+
+export const thesis = [
+  {
+    title: 'Близость к убою',
+    text: 'Сырьё поступает в коротком технологическом окне, меньше потерь качества, логистики и автолиза.',
+    proof: 'сырьевой договор + температурный журнал'
+  },
+  {
+    title: 'Вертикальная переработка',
+    text: 'Субпродукты, кости и жир переходят в лакомства, внутренние ингредиенты и корма с большей добавленной стоимостью.',
+    proof: 'Stage 1 → Stage 2 → Stage 3'
+  },
+  {
+    title: 'Цифровая прослеживаемость',
+    text: 'Партии, режимы обработки, лаборатория и QR-паспорт превращают качество в проверяемый актив.',
+    proof: 'batch passport TZY-2026-001'
+  },
+  {
+    title: 'Тиражируемость',
+    text: 'Модульная схема M0–M16 может переноситься к другим мясоперерабатывающим площадкам.',
+    proof: 'стандартизированные модули и P1–P10'
+  }
+];
+
+export const dealBreakers = [
+  {
+    title: 'Сырьевой договор',
+    severity: 'critical',
+    text: 'Без долгосрочного договора или LOI на 36–60 месяцев проект нельзя считать bankable.',
+    required: 'объёмы, формула цены, эксклюзив на фракции, штрафы, аудит, защита при смене контроля'
+  },
+  {
+    title: 'Независимая площадка',
+    severity: 'critical',
+    text: 'Размещение полностью на земле поставщика ухудшает финансируемость и контроль бизнеса.',
+    required: 'собственный участок или долгосрочная независимая аренда рядом с мясокомбинатом'
+  },
+  {
+    title: 'Технические условия',
+    severity: 'high',
+    text: 'Электро, вода, стоки, тепло, вентиляция и запахоочистка определяют реальный CAPEX.',
+    required: 'P1–P10, ЛОС, биофильтр, холодильный контур, резерв питания'
+  },
+  {
+    title: 'КП и график 30/70',
+    severity: 'high',
+    text: 'Китайские линии создают кассовый разрыв: аванс, остаток до отгрузки, доставка, монтаж.',
+    required: '3 КП по крупным лотам, нулевой транш, резерв 25–30 млн ₸'
+  }
+];
+
+export const criticalPath = [
+  { id: 'G0', title: 'Сырьё', status: 'deal-breaker', text: 'LOI/term sheet с якорным поставщиком и альтернативными источниками.' },
+  { id: 'G1', title: 'Площадка', status: 'open', text: 'Независимый участок, санитарные отступы, логистика сырья и отгрузки.' },
+  { id: 'G2', title: 'ТУ', status: 'open', text: 'Электро, вода, стоки, тепло, вентиляция, холод, связь.' },
+  { id: 'G3', title: 'КП', status: 'open', text: 'Минимум три коммерческих предложения по крупным лотам.' },
+  { id: 'G4', title: 'Пилот', status: 'next', text: '5–7 туш, kill-step, Aw, микробиология, упаковка, QR.' },
+  { id: 'G5', title: 'Финансирование', status: 'next', text: 'Первый транш 60–70 млн ₸, Damu/лизинг, оборотка и резерв.' },
+  { id: 'G6', title: 'Экспорт', status: 'later', text: 'ЕАЭС, Китай через CBEC, GACC/MARA только после проверки маршрута.' },
+  { id: 'G7', title: 'НИОКР', status: 'later', text: 'QazInnovations/Фонд науки через консорциум, не как деньги первого дня.' }
 ];
 
 export const modules = [
@@ -361,17 +454,49 @@ export const engineeringSystems = [
 ];
 
 export const products = [
-  { name: 'TAZY.PRO Treats', role: 'Ранняя выручка', stage: 'Stage 1', margin: 'высокая', description: 'Натуральные сушёные лакомства и жевательные изделия из проверенного сырья.' },
-  { name: 'TAZY Daily', role: 'Массовая линейка', stage: 'Stage 3', margin: 'средняя', description: 'Базовые повседневные рационы для собак и позднее кошек.' },
-  { name: 'TAZY WORK', role: 'Профессиональная линейка', stage: 'Stage 3', margin: 'средняя+', description: 'Рационы для рабочих, спортивных, охотничьих и служебных собак.' },
-  { name: 'TAZY CARE', role: 'Социальный и data loop', stage: 'Stage 3+', margin: 'репутационная', description: 'Программы питания, приюты, мониторинг состояния и данные реальной эксплуатации.' }
+  {
+    name: 'TAZY.PRO Treats',
+    role: 'Ранняя выручка',
+    stage: 'Stage 1',
+    margin: 'высокая',
+    description: 'Натуральные сушёные лакомства и жевательные изделия из проверенного сырья.',
+    examples: ['трахея', 'сухожилия', 'коллагеновые chews', 'наборы для крупных пород'],
+    constraint: 'нужны предупреждения по присмотру, Aw и стабильная упаковка'
+  },
+  {
+    name: 'TAZY Daily',
+    role: 'Массовая линейка',
+    stage: 'Stage 3',
+    margin: 'средняя',
+    description: 'Базовые повседневные рационы для собак и позднее кошек.',
+    examples: ['adult all breeds', 'puppy later', 'sensitive later'],
+    constraint: 'нельзя запускать до рецептур, экструдера и стабильной гранулы'
+  },
+  {
+    name: 'TAZY WORK',
+    role: 'Профессиональная линейка',
+    stage: 'Stage 3',
+    margin: 'средняя+',
+    description: 'Рационы для рабочих, спортивных, охотничьих и служебных собак.',
+    examples: ['high energy', 'kennel pack', 'служебные собаки'],
+    constraint: 'нужны испытания переносимости и понятные нормы кормления'
+  },
+  {
+    name: 'TAZY CARE',
+    role: 'Социальный и data loop',
+    stage: 'Stage 3+',
+    margin: 'репутационная',
+    description: 'Программы питания, приюты, мониторинг состояния и данные реальной эксплуатации.',
+    examples: ['приюты', 'МИО', 'корпоративные доноры'],
+    constraint: 'только обезличенные данные, договоры и ролевой доступ'
+  }
 ];
 
 export const markets = [
-  { name: 'Казахстан', horizon: '0–18 месяцев', channels: ['D2C', 'маркетплейсы', 'зоомагазины', 'заводчики'], emphasis: 'валидация качества и повторных продаж' },
-  { name: 'ЕАЭС', horizon: '12–30 месяцев', channels: ['дистрибьюторы', 'B2B', 'маркетплейсы'], emphasis: 'стандартизация документов и стабильность партий' },
-  { name: 'Китай', horizon: '24+ месяца', channels: ['CBEC', 'партнёр', 'специализированные каналы'], emphasis: 'регуляторная подготовка и бренд Казахстана' },
-  { name: 'GCC / Иран', horizon: '24+ месяца', channels: ['экспортный партнёр', 'B2B'], emphasis: 'сертификация, логистика, стабильный объём' }
+  { name: 'Казахстан', horizon: '0–18 месяцев', channels: ['D2C', 'маркетплейсы', 'зоомагазины', 'заводчики'], emphasis: 'валидация качества и повторных продаж', gate: 'пилотные партии, отзывы, повторные продажи' },
+  { name: 'ЕАЭС', horizon: '12–30 месяцев', channels: ['дистрибьюторы', 'B2B', 'маркетплейсы'], emphasis: 'стандартизация документов и стабильность партий', gate: 'ветеринарный пакет, маркировка, стабильность партии' },
+  { name: 'Китай', horizon: '18–36 месяцев', channels: ['CBEC', 'партнёр', 'специализированные каналы'], emphasis: 'сначала лакомства, не полнорационный корм без маршрута MARA/GACC', gate: 'GACC/страна-доступ/ответственный представитель' },
+  { name: 'GCC / Иран', horizon: '24+ месяца', channels: ['экспортный партнёр', 'B2B'], emphasis: 'сертификация, логистика, стабильный объём', gate: 'линия без свинины, Halal-пакет, ветеринарные документы' }
 ];
 
 export const qualityTrace = [
@@ -384,12 +509,19 @@ export const qualityTrace = [
 
 export const batch = {
   id: 'TZY-2026-001',
+  date: '18.05.2026',
   product: 'TAZY.PRO Adult Treats',
   source: 'побочное сырьё КРС, партия мясокомбината B24-05-18',
+  fraction: 'трахея / сухожилия / мягкие субпродукты',
+  receptionTemp: '+3,2 °C',
+  zone: 'M0 → M3 → L3 → M10',
   killStep: '82 °C / 16 секунд',
   aw: '0,58',
   lab: 'соответствует',
+  packaging: 'zip-пакет 250 г, QR-партия',
+  warehouse: 'M11 / FEFO',
   weight: '1 240 кг',
+  shipment: 'B2B + D2C тестовая отгрузка',
   qr: 'ready'
 };
 
@@ -403,16 +535,16 @@ export const gates = [
 ];
 
 export const documents = [
-  { folder: 'Investment', count: 8, items: ['меморандум', 'teaser', 'risk register', 'term sheet draft'] },
-  { folder: 'Finance', count: 7, items: ['модель', 'CAPEX', 'OPEX', 'cash flow', 'DSCR'] },
-  { folder: 'Engineering', count: 12, items: ['план', 'P1–P10', 'ТУ', 'зонирование', 'ЛОС'] },
-  { folder: 'Equipment', count: 16, items: ['КП', 'спецификации', 'delivery schedule', 'acceptance criteria'] },
-  { folder: 'Raw material', count: 6, items: ['SLA', 'объёмы', 'температурное окно', 'договор'] },
-  { folder: 'Legal', count: 5, items: ['ТОО', 'земля', 'аренда', 'IP', 'разрешения'] },
-  { folder: 'Quality', count: 9, items: ['HACCP', 'Aw', 'микробиология', 'QR-паспорт'] },
-  { folder: 'Export', count: 5, items: ['ЕАЭС', 'Китай', 'GCC', 'сертификаты'] },
-  { folder: 'R&D', count: 7, items: ['рецептуры', 'протоколы', 'QazInnovations', 'BSF optional'] },
-  { folder: 'Visuals', count: 14, items: ['cutaway', 'chain', '2D-план', 'рендеры продукта'] }
+  { folder: 'Investment', count: 8, status: 'draft', items: ['меморандум', 'teaser', 'risk register', 'term sheet draft'] },
+  { folder: 'Finance', count: 7, status: 'needs-model', items: ['модель', 'CAPEX', 'OPEX', 'cash flow', 'DSCR'] },
+  { folder: 'Engineering', count: 12, status: 'open', items: ['план', 'P1–P10', 'ТУ', 'зонирование', 'ЛОС'] },
+  { folder: 'Equipment', count: 16, status: 'open', items: ['3 КП', 'спецификации', 'инкотермс', 'сроки поставки'] },
+  { folder: 'Raw material', count: 6, status: 'deal-breaker', items: ['LOI', 'объёмы', 'формула цены', 'эксклюзив фракций'] },
+  { folder: 'Legal', count: 5, status: 'open', items: ['SPV/ТОО', 'земля', 'аренда', 'IP', 'разрешения'] },
+  { folder: 'Quality', count: 9, status: 'draft', items: ['HACCP', 'Aw', 'микробиология', 'QR-паспорт'] },
+  { folder: 'Export', count: 5, status: 'later', items: ['ЕАЭС', 'Китай', 'GCC', 'Halal'] },
+  { folder: 'R&D', count: 7, status: 'later', items: ['НИИ', 'гранты', 'испытания', 'QazInnovations'] },
+  { folder: 'Visuals', count: 14, status: 'draft', items: ['cutaway', 'chain', '2D-план', 'бренд', 'упаковка'] }
 ];
 
 export const financeDefaults = {
@@ -427,6 +559,76 @@ export const financeDefaults = {
   fx: 520,
   b2cShare: 45
 };
+
+export const financePresets = [
+  {
+    id: 'conservative',
+    label: 'Conservative',
+    note: 'платное сырьё, медленнее Stage 3, ниже B2C',
+    values: {
+      carcasses: 14,
+      freeRaw: 45,
+      treatsPrice: 7200,
+      feedPrice: 1450,
+      capex: 172,
+      loanRate: 20,
+      vendorDelay: 2,
+      stage3Month: 20,
+      fx: 560,
+      b2cShare: 25
+    }
+  },
+  {
+    id: 'base',
+    label: 'Base',
+    note: 'текущая управленческая модель',
+    values: financeDefaults
+  },
+  {
+    id: 'upside',
+    label: 'Upside',
+    note: 'сырьё защищено, быстрее Stage 3, выше прямые продажи',
+    values: {
+      carcasses: 28,
+      freeRaw: 95,
+      treatsPrice: 9800,
+      feedPrice: 2250,
+      capex: 158,
+      loanRate: 14,
+      vendorDelay: 6,
+      stage3Month: 11,
+      fx: 500,
+      b2cShare: 62
+    }
+  }
+];
+
+export const fundingStack = [
+  {
+    title: 'Нулевой транш',
+    amount: '25–30 млн ₸',
+    role: 'оборотка, упаковка, испытания, регистрация, резерв задержек',
+    readiness: 'нужен до оборудования'
+  },
+  {
+    title: 'Stage 1 CAPEX',
+    amount: '32–39 млн ₸',
+    role: 'лакомства, лаборатория, упаковка, цифровой минимум',
+    readiness: 'первый инвестиционный запрос'
+  },
+  {
+    title: 'Damu / Өрлеу',
+    amount: 'до условий программы',
+    role: 'инвестиции, оборотный капитал, возможный лизинг оборудования',
+    readiness: 'требует банковский пакет'
+  },
+  {
+    title: 'QazInnovations',
+    amount: 'не деньги первого дня',
+    role: 'ПО, испытания, сертификация, НИОКР через консорциум',
+    readiness: 'отдельный грантовый контур'
+  }
+];
 
 export const careLoop = [
   ['Производство', 'контроль партии, состав, QR-паспорт'],

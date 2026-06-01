@@ -3,16 +3,21 @@ import {
   batch,
   careLoop,
   coreKpis,
+  criticalPath,
+  dealBreakers,
   documents,
   engineeringSystems,
   financeDefaults,
+  financePresets,
+  fundingStack,
   gates,
   markets,
   modules,
   navigation,
   products,
   qualityTrace,
-  stageTabs
+  stageTabs,
+  thesis
 } from './data.js';
 
 const state = {
@@ -97,6 +102,33 @@ function renderAudienceControls() {
   `).join('');
 
   $('#audienceSummary').textContent = activeAudience().focus;
+  renderAudienceBrief();
+}
+
+function renderAudienceBrief() {
+  const audience = activeAudience();
+  const target = $('#audienceBrief');
+  if (!target) return;
+
+  target.innerHTML = `
+    <article class="audience-brief" data-accent="${escapeHtml(audience.accent)}">
+      <div>
+        <span>Режим</span>
+        <strong>${escapeHtml(audience.label)}</strong>
+      </div>
+      <dl>
+        <div>
+          <dt>Проверяет</dt>
+          <dd>${escapeHtml(audience.checks.join(' · '))}</dd>
+        </div>
+        <div>
+          <dt>Доказательства</dt>
+          <dd>${escapeHtml(audience.evidence.join(' · '))}</dd>
+        </div>
+      </dl>
+      <p>${escapeHtml(audience.nextAction)}</p>
+    </article>
+  `;
 }
 
 function renderStageControls() {
@@ -113,13 +145,35 @@ function renderStageControls() {
   `).join('');
 }
 
+function moduleMiniHtml() {
+  const item = getModule();
+  return `
+    <article class="chain-module-preview" id="chainModulePreview">
+      <div>
+        <span>${escapeHtml(item.id)} · ${escapeHtml(item.stage)}</span>
+        <strong>${escapeHtml(item.name)}</strong>
+      </div>
+      <p>${escapeHtml(item.purpose)}</p>
+      <dl>
+        <div><dt>Зона</dt><dd>${escapeHtml(item.zone)}</dd></div>
+        <div><dt>Контроль</dt><dd>${escapeHtml(item.controls.slice(0, 3).join(' · '))}</dd></div>
+      </dl>
+    </article>
+  `;
+}
+
+function renderChainModulePreview() {
+  const target = $('#chainModulePreview');
+  if (target) target.outerHTML = moduleMiniHtml();
+}
+
 function renderHeroMetrics() {
   const audience = activeAudience();
   $('#heroMetrics').innerHTML = [
     ['Фокус', audience.primaryMetric],
     ['Первый транш', '60–70 млн ₸'],
     ['Базовый CAPEX', '≈162 млн ₸'],
-    ['Режим', audience.label]
+    ['Deal-breaker', 'сырьё 36–60 мес.']
   ].map(([label, value]) => `
     <div class="hero-metric">
       <span>${escapeHtml(label)}</span>
@@ -150,6 +204,12 @@ function renderChain() {
     <div class="chain-map__summary">
       <strong>${escapeHtml(stage.title)}</strong>
       <p>${escapeHtml(stage.summary)}</p>
+      <dl class="stage-facts">
+        <div><dt>Выход</dt><dd>${escapeHtml(stage.output)}</dd></div>
+        <div><dt>CAPEX</dt><dd>${escapeHtml(stage.capex)}</dd></div>
+        <div><dt>Гейт</dt><dd>${escapeHtml(stage.gate)}</dd></div>
+        <div><dt>Риск</dt><dd>${escapeHtml(stage.risk)}</dd></div>
+      </dl>
     </div>
     <figure class="hero-factory-preview">
       <img src="./assets/drafts/factory-cutaway.png" alt="Изометрический cutaway-макет завода TAZY.PRO с сырьевой зоной, рендерингом, линией лакомств, кормовой линией и экологическим контуром.">
@@ -157,17 +217,48 @@ function renderChain() {
     </figure>
     <div class="chain-chip-grid" aria-label="Модули выбранного этапа">
       ${chainModules.slice(0, 14).map((item) => `
-        <button class="chain-chip" type="button" data-module="${item.id}">
+        <button class="chain-chip ${state.module === item.id ? 'is-active' : ''}" type="button" data-module="${item.id}">
           <span>${escapeHtml(item.id)}</span>
           <strong>${escapeHtml(item.name)}</strong>
         </button>
       `).join('')}
     </div>
+    ${moduleMiniHtml()}
     <details class="reference-toggle">
       <summary>Полная технологическая схема</summary>
       <img src="./assets/drafts/production-chain.png" alt="Полная производственная цепочка TAZY.PRO от сырья до готового корма и экспортной доставки.">
     </details>
   `;
+}
+
+function renderLogic() {
+  $('#thesisGrid').innerHTML = thesis.map((item) => `
+    <article class="thesis-card">
+      ${icon('system')}
+      <h3>${escapeHtml(item.title)}</h3>
+      <p>${escapeHtml(item.text)}</p>
+      <span>${escapeHtml(item.proof)}</span>
+    </article>
+  `).join('');
+
+  $('#dealBreakerList').innerHTML = dealBreakers.map((item) => `
+    <article class="deal-card" data-severity="${escapeHtml(item.severity)}">
+      ${icon(item.severity === 'critical' ? 'gate' : 'quality')}
+      <div>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.text)}</p>
+        <strong>${escapeHtml(item.required)}</strong>
+      </div>
+    </article>
+  `).join('');
+
+  $('#criticalPath').innerHTML = criticalPath.map((item) => `
+    <article class="path-step" data-status="${escapeHtml(item.status)}">
+      <span>${escapeHtml(item.id)}</span>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p>${escapeHtml(item.text)}</p>
+    </article>
+  `).join('');
 }
 
 function renderModuleHotspots() {
@@ -278,15 +369,17 @@ function calculateFinance() {
   const treatsFactor = f.treatsPrice / financeDefaults.treatsPrice;
   const feedFactor = f.feedPrice / financeDefaults.feedPrice;
   const priceFactor = treatsFactor * 0.34 + feedFactor * 0.66;
+  const channelFactor = 0.92 + (f.b2cShare / 100) * 0.24;
   const rawPenalty = (100 - f.freeRaw) * 0.31 * scale;
   const fxFactor = 1 + Math.max(-0.15, Math.min(0.2, (f.fx - financeDefaults.fx) / financeDefaults.fx * 0.45));
   const capex = f.capex * fxFactor;
-  const revenue = 321 * scale * priceFactor;
-  const ebitda = Math.max(12, 79 * scale * priceFactor - rawPenalty);
+  const revenue = 321 * scale * priceFactor * channelFactor;
+  const channelWorkingCapitalPenalty = Math.max(0, f.b2cShare - 45) * 0.18;
+  const ebitda = Math.max(12, 79 * scale * priceFactor * channelFactor - rawPenalty - channelWorkingCapitalPenalty);
   const payback = capex / ebitda;
   const debtPressure = f.loanRate > 16 ? (f.loanRate - 16) * 0.025 : 0;
-  const dscr = Math.max(0.8, 1.72 - debtPressure - Math.max(0, f.stage3Month - 14) * 0.025 + (f.vendorDelay * 0.02));
-  const liquidityNeed = 129 + Math.max(0, f.stage3Month - 14) * 2.4 - f.vendorDelay * 1.6 + (100 - f.freeRaw) * 0.22;
+  const dscr = Math.max(0.8, 1.72 - debtPressure - Math.max(0, f.stage3Month - 14) * 0.025 + (f.vendorDelay * 0.02) - channelWorkingCapitalPenalty * 0.003);
+  const liquidityNeed = 129 + Math.max(0, f.stage3Month - 14) * 2.4 - f.vendorDelay * 1.6 + (100 - f.freeRaw) * 0.22 + Math.max(0, f.b2cShare - 45) * 0.32;
 
   return {
     capex,
@@ -294,8 +387,30 @@ function calculateFinance() {
     ebitda,
     payback,
     dscr,
-    liquidityNeed
+    liquidityNeed,
+    channelFactor
   };
+}
+
+function renderFinancePresets() {
+  const matchesPreset = (preset) => Object.entries(preset.values)
+    .every(([key, value]) => state.finance[key] === value);
+
+  $('#financePresets').innerHTML = financePresets.map((preset) => `
+    <button class="preset-card ${matchesPreset(preset) ? 'is-active' : ''}" type="button" data-finance-preset="${preset.id}">
+      <strong>${escapeHtml(preset.label)}</strong>
+      <span>${escapeHtml(preset.note)}</span>
+    </button>
+  `).join('');
+
+  $('#fundingStack').innerHTML = fundingStack.map((item) => `
+    <article class="funding-card">
+      <span>${escapeHtml(item.amount)}</span>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p>${escapeHtml(item.role)}</p>
+      <strong>${escapeHtml(item.readiness)}</strong>
+    </article>
+  `).join('');
 }
 
 function renderSimulator() {
@@ -374,7 +489,9 @@ function renderFinanceOutput() {
     ['CAPEX', formatMoney(result.capex), 'с учётом валютной чувствительности'],
     ['Выручка год 3', formatMoney(result.revenue), 'управленческая модель'],
     ['EBITDA', formatMoney(result.ebitda), 'при текущих параметрах'],
-    ['Payback', `${result.payback.toFixed(1).replace('.', ',')} года`, `DSCR ${result.dscr.toFixed(2).replace('.', ',')}`]
+    ['Payback', `${result.payback.toFixed(1).replace('.', ',')} года`, `DSCR ${result.dscr.toFixed(2).replace('.', ',')}`],
+    ['Потребность в ликвидности', formatMoney(result.liquidityNeed), 'пик модели с обороткой'],
+    ['B2C-множитель', result.channelFactor.toFixed(2).replace('.', ','), 'маржа выше, оборотка тяжелее']
   ].map(([label, value, note]) => `
     <article class="scenario-card">
       <span>${escapeHtml(label)}</span>
@@ -412,6 +529,7 @@ function updateFinanceOutputs() {
       input.value = value;
     }
   });
+  renderFinancePresets();
   renderFinanceOutput();
 }
 
@@ -424,6 +542,7 @@ function renderMarkets() {
       <dl>
         <div><dt>Горизонт</dt><dd>${escapeHtml(item.horizon)}</dd></div>
         <div><dt>Каналы</dt><dd>${escapeHtml(item.channels.join(', '))}</dd></div>
+        <div><dt>Гейт</dt><dd>${escapeHtml(item.gate)}</dd></div>
       </dl>
     </article>
   `).join('');
@@ -441,6 +560,8 @@ function renderProducts() {
         <div><dt>Роль</dt><dd>${escapeHtml(item.role)}</dd></div>
         <div><dt>Этап</dt><dd>${escapeHtml(item.stage)}</dd></div>
         <div><dt>Маржа</dt><dd>${escapeHtml(item.margin)}</dd></div>
+        <div><dt>Примеры</dt><dd>${escapeHtml(item.examples.join(', '))}</dd></div>
+        <div><dt>Ограничение</dt><dd>${escapeHtml(item.constraint)}</dd></div>
       </dl>
     </article>
   `).join('');
@@ -456,12 +577,19 @@ function renderQuality() {
       <div class="qr-mark" aria-label="Демо QR-паспорта партии"></div>
     </div>
     <dl class="passport-list">
+      <div><dt>Дата поступления</dt><dd>${escapeHtml(batch.date)}</dd></div>
       <div><dt>Продукт</dt><dd>${escapeHtml(batch.product)}</dd></div>
       <div><dt>Сырьё</dt><dd>${escapeHtml(batch.source)}</dd></div>
+      <div><dt>Фракция</dt><dd>${escapeHtml(batch.fraction)}</dd></div>
+      <div><dt>Температура приёмки</dt><dd>${escapeHtml(batch.receptionTemp)}</dd></div>
+      <div><dt>Зона обработки</dt><dd>${escapeHtml(batch.zone)}</dd></div>
       <div><dt>Kill-step</dt><dd>${escapeHtml(batch.killStep)}</dd></div>
       <div><dt>Aw</dt><dd>${escapeHtml(batch.aw)}</dd></div>
       <div><dt>Лаборатория</dt><dd>${escapeHtml(batch.lab)}</dd></div>
+      <div><dt>Упаковка</dt><dd>${escapeHtml(batch.packaging)}</dd></div>
+      <div><dt>Склад</dt><dd>${escapeHtml(batch.warehouse)}</dd></div>
       <div><dt>Вес партии</dt><dd>${escapeHtml(batch.weight)}</dd></div>
+      <div><dt>Отгрузка</dt><dd>${escapeHtml(batch.shipment)}</dd></div>
     </dl>
   `;
 
@@ -501,12 +629,13 @@ function renderGates() {
 
 function renderDocuments() {
   $('#documentRoom').innerHTML = documents.map((item) => `
-    <article class="document-card">
+    <article class="document-card" data-status="${escapeHtml(item.status)}">
       <div class="document-card__head">
         ${icon('document')}
         <h3>${escapeHtml(item.folder)}</h3>
         <span>${fmt.format(item.count)}</span>
       </div>
+      <strong>${escapeHtml(item.status)}</strong>
       <p>${escapeHtml(item.items.join(' · '))}</p>
     </article>
   `).join('');
@@ -516,15 +645,18 @@ function renderStaticSections() {
   renderNavigation();
   renderAudienceControls();
   renderStageControls();
+  renderAudienceBrief();
   renderHeroMetrics();
   renderKpis();
   renderChain();
+  renderLogic();
   renderModuleHotspots();
   renderModuleDetail();
   renderSystemList();
   renderSystemDetail();
   renderEquipmentTable();
   renderSimulator();
+  renderFinancePresets();
   renderFinanceOutput();
   renderMarkets();
   renderProducts();
@@ -559,6 +691,8 @@ function bindEvents() {
     const moduleButton = event.target.closest('[data-module]');
     if (moduleButton) {
       state.module = moduleButton.dataset.module;
+      renderChainModulePreview();
+      $$('.chain-chip').forEach((chip) => chip.classList.toggle('is-active', chip.dataset.module === state.module));
       renderModuleHotspots();
       renderModuleDetail();
     }
@@ -568,6 +702,15 @@ function bindEvents() {
       state.system = systemButton.dataset.system;
       renderSystemList();
       renderSystemDetail();
+    }
+
+    const presetButton = event.target.closest('[data-finance-preset]');
+    if (presetButton) {
+      const preset = financePresets.find((item) => item.id === presetButton.dataset.financePreset);
+      if (preset) {
+        state.finance = { ...preset.values };
+        updateFinanceOutputs();
+      }
     }
   });
 

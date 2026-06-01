@@ -7,6 +7,7 @@
 - Статический shell без внешних CDN и без сборки.
 - Данные вынесены в `src/data.js`.
 - Smoke-проверка desktop/tablet/mobile вынесена в `scripts/browser-smoke.mjs`.
+- Smoke проверяет audience mode, stage/module selection, finance preset и отсутствие горизонтального overflow.
 - Черновые визуальные ассеты лежат локально в `assets/drafts/`.
 - Статическая сборка в `dist/tazy-pro-navigator`.
 - Пример nginx basic auth + CSP: `ops/nginx-basic-auth.conf.example`.
@@ -18,6 +19,7 @@
 3. Где хранится настоящая document room: qdev storage, backend API или защищённая папка.
 4. Реальная финансовая модель как отдельный JSON/таблица.
 5. Финальные рендеры производственной схемы вместо GPT-черновиков.
+6. Журнал просмотров/скачиваний для investor interest tracking.
 
 ## Минимальный preflight перед деплоем
 
