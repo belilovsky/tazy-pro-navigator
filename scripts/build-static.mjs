@@ -7,6 +7,7 @@ const files = [
   'styles.css',
   'favicon.svg',
   'manifest.webmanifest',
+  'fonts',
   'src',
   'assets'
 ];

@@ -101,8 +101,7 @@ function renderAudienceControls() {
     <button
       class="segment ${state.audience === item.id ? 'is-active' : ''}"
       type="button"
-      role="tab"
-      aria-selected="${state.audience === item.id}"
+      aria-pressed="${state.audience === item.id}"
       data-audience="${item.id}"
     >
       ${escapeHtml(item.label)}
@@ -144,8 +143,7 @@ function renderStageControls() {
     <button
       class="segment ${state.stage === item.id ? 'is-active' : ''}"
       type="button"
-      role="tab"
-      aria-selected="${state.stage === item.id}"
+      aria-pressed="${state.stage === item.id}"
       data-stage="${item.id}"
     >
       ${escapeHtml(item.label)}
@@ -225,7 +223,7 @@ function renderChain() {
     </figure>
     <div class="chain-chip-grid" aria-label="Модули выбранного этапа">
       ${chainModules.slice(0, 14).map((item) => `
-        <button class="chain-chip ${state.module === item.id ? 'is-active' : ''}" type="button" data-module="${item.id}">
+        <button class="chain-chip ${state.module === item.id ? 'is-active' : ''}" type="button" data-module="${item.id}" aria-pressed="${state.module === item.id}">
           <span>${escapeHtml(item.id)}</span>
           <strong>${escapeHtml(item.name)}</strong>
         </button>
@@ -284,6 +282,7 @@ function renderModuleHotspots() {
         style="left:${item.position[0]}%; top:${item.position[1]}%;"
         data-module="${item.id}"
         aria-label="${escapeHtml(item.id)}: ${escapeHtml(item.name)}"
+        aria-pressed="${isActive}"
         ${isAvailable ? '' : 'disabled'}
         ${disabled}
       >
@@ -330,6 +329,7 @@ function renderSystemList() {
       class="system-pill ${state.system === item.id ? 'is-active' : ''}"
       type="button"
       data-system="${item.id}"
+      aria-pressed="${state.system === item.id}"
     >
       <span>${escapeHtml(item.id)}</span>
       <strong>${escapeHtml(item.name)}</strong>
@@ -407,7 +407,7 @@ function renderFinancePresets() {
     .every(([key, value]) => state.finance[key] === value);
 
   $('#financePresets').innerHTML = financePresets.map((preset) => `
-    <button class="preset-card ${matchesPreset(preset) ? 'is-active' : ''}" type="button" data-finance-preset="${preset.id}">
+    <button class="preset-card ${matchesPreset(preset) ? 'is-active' : ''}" type="button" data-finance-preset="${preset.id}" aria-pressed="${matchesPreset(preset)}">
       <strong>${escapeHtml(preset.label)}</strong>
       <span>${escapeHtml(preset.note)}</span>
     </button>
@@ -708,7 +708,11 @@ function bindEvents() {
       if (moduleButton.disabled || moduleButton.getAttribute('aria-disabled') === 'true') return;
       state.module = moduleButton.dataset.module;
       renderChainModulePreview();
-      $$('.chain-chip').forEach((chip) => chip.classList.toggle('is-active', chip.dataset.module === state.module));
+      $$('.chain-chip').forEach((chip) => {
+        const isActive = chip.dataset.module === state.module;
+        chip.classList.toggle('is-active', isActive);
+        chip.setAttribute('aria-pressed', String(isActive));
+      });
       renderModuleHotspots();
       renderModuleDetail();
     }
