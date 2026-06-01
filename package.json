@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "python3 -m http.server 4181",
     "check": "node --check src/data.js && node --check src/app.js && node scripts/static-check.mjs",
+    "build": "node scripts/build-static.mjs",
     "smoke": "node scripts/browser-smoke.mjs"
   }
 }

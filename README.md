@@ -8,6 +8,7 @@
 
 ```bash
 ./scripts/check.sh
+node scripts/build-static.mjs
 python3 -m http.server 4181
 ```
 
@@ -27,3 +28,5 @@ PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js node script
 - `src/app.js` — render/state/interactions.
 - `assets/drafts/` — текущие визуальные зарисовки как временные ассеты.
 - `docs/product-brief.md` — решение по границам продукта и следующим шагам.
+- `docs/deploy-readiness.md` — что готово к деплою и что решается после выбора домена.
+- `ops/nginx-basic-auth.conf.example` — пример закрытого доступа на nginx.

@@ -76,7 +76,7 @@ function getSystem(id = state.system) {
 
 function renderNavigation() {
   $('#sideNav').innerHTML = navigation.map(([id, number, label]) => `
-    <a class="side-nav__link" href="#${id}" data-nav-link="${id}">
+    <a class="side-nav__link ${id === 'overview' ? 'is-active' : ''}" href="#${id}" data-nav-link="${id}" ${id === 'overview' ? 'aria-current="page"' : ''}>
       <span class="side-nav__number">${number}</span>
       <span>${escapeHtml(label)}</span>
     </a>
@@ -585,7 +585,13 @@ function bindEvents() {
 
     if (visible) {
       $$('[data-nav-link]').forEach((link) => {
-        link.classList.toggle('is-active', link.dataset.navLink === visible.target.id);
+        const active = link.dataset.navLink === visible.target.id;
+        link.classList.toggle('is-active', active);
+        if (active) {
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.removeAttribute('aria-current');
+        }
       });
     }
   }, { rootMargin: '-20% 0px -60% 0px', threshold: [0.1, 0.35, 0.6] });

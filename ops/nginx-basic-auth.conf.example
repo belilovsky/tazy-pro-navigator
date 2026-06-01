@@ -1,0 +1,19 @@
+# Example only. Final domain and auth realm should be set at deploy time.
+server {
+  listen 443 ssl http2;
+  server_name tazy-pro.example.com;
+
+  root /var/www/tazy-pro-navigator;
+  index index.html;
+
+  auth_basic "TAZY.PRO Project Navigator";
+  auth_basic_user_file /etc/nginx/.htpasswd-tazy-pro;
+
+  add_header X-Content-Type-Options nosniff always;
+  add_header Referrer-Policy strict-origin-when-cross-origin always;
+  add_header Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" always;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}

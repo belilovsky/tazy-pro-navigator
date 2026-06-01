@@ -11,6 +11,7 @@ import {
 } from '../src/data.js';
 
 const requiredAssets = [
+  'manifest.webmanifest',
   'assets/drafts/factory-cutaway.png',
   'assets/drafts/production-chain.png',
   'assets/drafts/engineering-plan.png',
