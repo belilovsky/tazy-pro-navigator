@@ -34,6 +34,19 @@ const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const fmt = new Intl.NumberFormat('ru-RU');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+const FINANCE_CONTROLS = [
+  ['carcasses', 'Туш в сутки', 8, 48, 1, 'шт.'],
+  ['freeRaw', 'Доля бесплатного сырья', 0, 100, 5, '%'],
+  ['treatsPrice', 'Цена лакомств', 4500, 14000, 250, '₸/кг'],
+  ['feedPrice', 'Цена сухого корма', 900, 3600, 50, '₸/кг'],
+  ['capex', 'CAPEX по этапам', 130, 230, 1, 'млн ₸'],
+  ['loanRate', 'Ставка кредита', 8, 28, 0.5, '%'],
+  ['vendorDelay', 'Отсрочка поставщика', 0, 8, 1, 'мес.'],
+  ['stage3Month', 'Запуск Stage 3', 8, 24, 1, 'мес.'],
+  ['fx', 'Курс валюты для оборудования', 440, 650, 5, '₸/$'],
+  ['b2cShare', 'Доля B2C', 10, 80, 5, '%']
+];
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -143,6 +156,7 @@ function renderStageControls() {
     <button
       class="segment ${state.stage === item.id ? 'is-active' : ''}"
       type="button"
+      data-stage-control="true"
       aria-pressed="${state.stage === item.id}"
       data-stage="${item.id}"
     >
@@ -218,7 +232,13 @@ function renderChain() {
       </dl>
     </div>
     <figure class="hero-factory-preview">
-      <img src="./assets/drafts/factory-cutaway.png" alt="Изометрический cutaway-макет завода TAZY.PRO с сырьевой зоной, рендерингом, линией лакомств, кормовой линией и экологическим контуром.">
+      <img
+        src="./assets/drafts/factory-cutaway.png"
+        alt="Изометрический cutaway-макет завода TAZY.PRO с сырьевой зоной, рендерингом, линией лакомств, кормовой линией и экологическим контуром."
+        width="1672"
+        height="941"
+        loading="lazy"
+      >
       <figcaption>Главная производственная модель: клик по модулю ниже открывает инженерную карточку.</figcaption>
     </figure>
     <div class="chain-chip-grid" aria-label="Модули выбранного этапа">
@@ -231,8 +251,14 @@ function renderChain() {
     </div>
     ${moduleMiniHtml()}
     <details class="reference-toggle">
-      <summary>Полная технологическая схема</summary>
-      <img src="./assets/drafts/production-chain.png" alt="Полная производственная цепочка TAZY.PRO от сырья до готового корма и экспортной доставки.">
+      <summary aria-expanded="false">Полная технологическая схема</summary>
+      <img
+        src="./assets/drafts/production-chain.png"
+        alt="Полная производственная цепочка TAZY.PRO от сырья до готового корма и экспортной доставки."
+        width="1672"
+        height="941"
+        loading="lazy"
+      >
     </details>
   `;
 }
@@ -424,20 +450,7 @@ function renderFinancePresets() {
 }
 
 function renderSimulator() {
-  const controls = [
-    ['carcasses', 'Туш в сутки', 8, 48, 1, 'шт.'],
-    ['freeRaw', 'Доля бесплатного сырья', 0, 100, 5, '%'],
-    ['treatsPrice', 'Цена лакомств', 4500, 14000, 250, '₸/кг'],
-    ['feedPrice', 'Цена сухого корма', 900, 3600, 50, '₸/кг'],
-    ['capex', 'CAPEX по этапам', 130, 230, 1, 'млн ₸'],
-    ['loanRate', 'Ставка кредита', 8, 28, 0.5, '%'],
-    ['vendorDelay', 'Отсрочка поставщика', 0, 8, 1, 'мес.'],
-    ['stage3Month', 'Запуск Stage 3', 8, 24, 1, 'мес.'],
-    ['fx', 'Курс валюты для оборудования', 440, 650, 5, '₸/$'],
-    ['b2cShare', 'Доля B2C', 10, 80, 5, '%']
-  ];
-
-  $('#simulator').innerHTML = controls.map(([key, label, min, max, step, unit]) => `
+  $('#simulator').innerHTML = FINANCE_CONTROLS.map(([key, label, min, max, step, unit]) => `
     <label class="range-field">
       <span>
         <strong>${escapeHtml(label)}</strong>
@@ -534,8 +547,8 @@ function updateFinanceOutputs() {
     const output = $(`#${key}Output`);
     const input = $(`#${key}`);
     if (output && input) {
-      const unit = output.textContent.split(' ').slice(1).join(' ');
-      output.textContent = `${fmt.format(value)} ${unit}`;
+      const unit = FINANCE_CONTROLS.find((item) => item[0] === key)?.[5] ?? '';
+      output.textContent = `${fmt.format(value)} ${escapeHtml(unit)}`;
       input.value = value;
     }
   });
@@ -693,7 +706,7 @@ function bindEvents() {
       renderHeroMetrics();
     }
 
-    const stageButton = event.target.closest('[data-stage]');
+    const stageButton = event.target.closest('[data-stage-control="true"]');
     if (stageButton) {
       state.stage = stageButton.dataset.stage;
       ensureStageModule();
@@ -731,6 +744,16 @@ function bindEvents() {
         state.finance = { ...preset.values };
         updateFinanceOutputs();
       }
+    }
+
+    const chainDetailsToggle = event.target.closest('.reference-toggle > summary');
+    if (chainDetailsToggle) {
+      const details = chainDetailsToggle.closest('.reference-toggle');
+      if (details instanceof HTMLDetailsElement) {
+        details.open = !details.open;
+        chainDetailsToggle.setAttribute('aria-expanded', String(details.open));
+      }
+      event.preventDefault();
     }
   });
 
