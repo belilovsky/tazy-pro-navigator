@@ -126,10 +126,14 @@
               <div class="section-kicker">03 / Завод и производственная модель</div>
               <h2 id="factoryTitle">Кликабельный cutaway-завод и модульная карта M0–M16</h2>
             </div>
-            <p>Карта использует текущие зарисовки как визуальный слой, а данные модулей живут отдельно и могут стать ТЗ.</p>
+            <p>Схема связывает санитарное зонирование, рендеринг, параллельную линию лакомств, кормовой контур и выпуск готовой партии в одном пространстве.</p>
           </div>
           <div class="factory-layout">
             <div class="factory-map">
+              <div class="media-surface__chrome">
+                <div class="media-surface__eyebrow">Интерактивный cutaway</div>
+                <div class="media-surface__stats" id="factoryMapLegend" aria-label="Контекст производственной схемы"></div>
+              </div>
               <img
                 src="./assets/drafts/factory-cutaway.png"
                 alt="Изометрический макет завода TAZY.PRO с зонами сырья, переработки, лакомств, кормовой линии, лаборатории и отгрузки."
@@ -140,6 +144,7 @@
                 fetchpriority="high"
               >
               <div class="hotspots" id="moduleHotspots" aria-label="Модули завода"></div>
+              <div class="media-surface__footer" id="factoryMapFooter" aria-live="polite"></div>
             </div>
             <article class="detail-panel" id="moduleDetail" aria-live="polite"></article>
           </div>
@@ -155,6 +160,10 @@
           </div>
           <div class="engineering-grid">
             <div class="engineering-map">
+              <div class="media-surface__chrome">
+                <div class="media-surface__eyebrow">Инженерный план P1–P10</div>
+                <div class="media-surface__stats" id="engineeringMapLegend" aria-label="Группы инженерных систем"></div>
+              </div>
               <img
                 src="./assets/drafts/engineering-plan.png"
                 alt="2D-план инженерных систем завода TAZY.PRO с точками P1–P10."
@@ -163,6 +172,7 @@
                 loading="lazy"
                 decoding="async"
               >
+              <div class="media-surface__footer" id="engineeringMapFooter" aria-live="polite"></div>
             </div>
             <div>
               <div class="system-list" id="systemList"></div>

@@ -47,6 +47,44 @@ const FINANCE_CONTROLS = [
   ['b2cShare', 'Доля B2C', 10, 80, 5, '%']
 ];
 
+const CONSTRUCTOR_LANES = [
+  {
+    id: 'raw',
+    label: 'Сырьё',
+    description: 'Приёмка, холод, мойка и первичная подготовка под технологический цикл.',
+    accent: 'orange',
+    modules: ['M0', 'M1', 'M2', 'M3']
+  },
+  {
+    id: 'ingredients',
+    label: 'Внутренние ингредиенты',
+    description: 'Рендеринг, санитарный барьер и инженерный слой, который делает контур замкнутым.',
+    accent: 'amber',
+    modules: ['M4', 'M5', 'M13', 'M14']
+  },
+  {
+    id: 'treats',
+    label: 'Линия лакомств',
+    description: 'Параллельная ранняя выручка без ожидания полной экструзионной линии.',
+    accent: 'violet',
+    modules: ['L1', 'L2', 'L3', 'L4']
+  },
+  {
+    id: 'feed',
+    label: 'Кормовой контур',
+    description: 'Смешивание, экструзия, сушка, упаковка и выпуск готовой партии.',
+    accent: 'blue',
+    modules: ['M6', 'M7', 'M8', 'M9', 'M10', 'M11', 'M12', 'M16']
+  }
+];
+
+const SYSTEM_GROUPS = [
+  ['Энергия', 'P1, P2, P4'],
+  ['Среда и стоки', 'P3, P5, P6, P9'],
+  ['Воздух и ESG', 'P7, P8'],
+  ['Digital', 'P10']
+];
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -218,6 +256,14 @@ function renderChain() {
   const stage = activeStage();
   const moduleSet = new Set(stage.modules);
   const chainModules = modules.filter((item) => moduleSet.has(item.id));
+  const constructorLanes = CONSTRUCTOR_LANES
+    .map((lane) => ({
+      ...lane,
+      items: lane.modules
+        .map((id) => chainModules.find((item) => item.id === id))
+        .filter(Boolean)
+    }))
+    .filter((lane) => lane.items.length);
 
   $('#chainMap').dataset.stage = stage.color;
   $('#chainMap').innerHTML = `
@@ -231,37 +277,51 @@ function renderChain() {
         <div><dt>Риск</dt><dd>${escapeHtml(stage.risk)}</dd></div>
       </dl>
     </div>
-    <figure class="hero-factory-preview">
-      <img
-        src="./assets/drafts/factory-cutaway.png"
-        alt="Изометрический cutaway-макет завода TAZY.PRO с сырьевой зоной, рендерингом, линией лакомств, кормовой линией и экологическим контуром."
-        width="1672"
-        height="941"
-        loading="lazy"
-        decoding="async"
-      >
-      <figcaption>Главная производственная модель: клик по модулю ниже открывает инженерную карточку.</figcaption>
-    </figure>
-    <div class="chain-chip-grid" aria-label="Модули выбранного этапа">
-      ${chainModules.map((item) => `
-        <button class="chain-chip ${state.module === item.id ? 'is-active' : ''}" type="button" data-module="${item.id}" aria-pressed="${state.module === item.id}">
-          <span>${escapeHtml(item.id)}</span>
-          <strong>${escapeHtml(item.name)}</strong>
-        </button>
-      `).join('')}
+    <div class="stage-constructor">
+      <div class="constructor-lane-grid" aria-label="Конструктор технологического контура">
+        ${constructorLanes.map((lane) => `
+          <article class="constructor-lane" data-accent="${escapeHtml(lane.accent)}">
+            <div class="constructor-lane__head">
+              <div>
+                <span>${escapeHtml(lane.label)}</span>
+                <strong>${fmt.format(lane.items.length)} модул${lane.items.length === 1 ? 'ь' : lane.items.length < 5 ? 'я' : 'ей'}</strong>
+              </div>
+              <small>${escapeHtml(lane.id.toUpperCase())}</small>
+            </div>
+            <p>${escapeHtml(lane.description)}</p>
+            <div class="constructor-lane__chips">
+              ${lane.items.map((item) => `
+                <button class="chain-chip ${state.module === item.id ? 'is-active' : ''}" type="button" data-module="${item.id}" aria-pressed="${state.module === item.id}">
+                  <span>${escapeHtml(item.id)}</span>
+                  <strong>${escapeHtml(item.name)}</strong>
+                </button>
+              `).join('')}
+            </div>
+          </article>
+        `).join('')}
+      </div>
+      <aside class="stage-constructor__reference">
+        <div class="stage-constructor__eyebrow">Референс потока</div>
+        <h3>Полная производственная цепочка</h3>
+        <p>Сводная схема помогает быстро объяснить инвестору, банку и проектировщику, где именно появляются внутренние ингредиенты, лакомства, сухой корм и готовая партия.</p>
+        <figure class="stage-sheet">
+          <img
+            src="./assets/drafts/production-chain.png"
+            alt="Полная производственная цепочка TAZY.PRO от сырья до готового корма и экспортной доставки."
+            width="1672"
+            height="941"
+            loading="eager"
+            decoding="async"
+          >
+          <figcaption>От входного контроля сырья до готовой партии, лаборатории, QR-паспорта и экспортного канала.</figcaption>
+        </figure>
+        <div class="stage-constructor__actions">
+          <span>${escapeHtml(stage.label)} · ${fmt.format(stage.modules.length)} активных модулей</span>
+          <button class="ghost-button ghost-button--compact" type="button" data-scroll-target="factory">Открыть cutaway</button>
+        </div>
+      </aside>
     </div>
     ${moduleMiniHtml()}
-    <details class="reference-toggle">
-      <summary aria-expanded="false">Полная технологическая схема</summary>
-      <img
-        src="./assets/drafts/production-chain.png"
-        alt="Полная производственная цепочка TAZY.PRO от сырья до готового корма и экспортной доставки."
-        width="1672"
-        height="941"
-        loading="lazy"
-        decoding="async"
-      >
-    </details>
   `;
 }
 
@@ -371,6 +431,47 @@ function renderSystemDetail() {
     <div class="detail-panel__eyebrow">${escapeHtml(item.group)} · ${escapeHtml(item.priority)}</div>
     <h3>${escapeHtml(item.id)} — ${escapeHtml(item.name)}</h3>
     <p>${escapeHtml(item.detail)}</p>
+  `;
+}
+
+function renderFactoryMedia() {
+  const stage = activeStage();
+  const module = getModule();
+  $('#factoryMapLegend').innerHTML = [
+    ['Этап', stage.label],
+    ['Модулей в фокусе', String(stage.modules.length)],
+    ['Слой', 'зоны + потоки + экология']
+  ].map(([label, value]) => `
+    <div class="media-stat">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value)}</strong>
+    </div>
+  `).join('');
+
+  $('#factoryMapFooter').innerHTML = `
+    <div>
+      <span>Сейчас на карте</span>
+      <strong>${escapeHtml(module.id)} · ${escapeHtml(module.name)}</strong>
+    </div>
+    <p>${escapeHtml(module.purpose)}</p>
+  `;
+}
+
+function renderEngineeringMedia() {
+  const system = getSystem();
+  $('#engineeringMapLegend').innerHTML = SYSTEM_GROUPS.map(([label, value]) => `
+    <div class="media-stat">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value)}</strong>
+    </div>
+  `).join('');
+
+  $('#engineeringMapFooter').innerHTML = `
+    <div>
+      <span>Текущий узел</span>
+      <strong>${escapeHtml(system.id)} · ${escapeHtml(system.name)}</strong>
+    </div>
+    <p>${escapeHtml(system.detail)}</p>
   `;
 }
 
@@ -677,8 +778,10 @@ function renderStaticSections() {
   renderLogic();
   renderModuleHotspots();
   renderModuleDetail();
+  renderFactoryMedia();
   renderSystemList();
   renderSystemDetail();
+  renderEngineeringMedia();
   renderEquipmentTable();
   renderSimulator();
   renderFinancePresets();
@@ -716,6 +819,7 @@ function bindEvents() {
       renderChain();
       renderModuleHotspots();
       renderModuleDetail();
+      renderFactoryMedia();
     }
 
     const moduleButton = event.target.closest('[data-module]');
@@ -730,6 +834,7 @@ function bindEvents() {
       });
       renderModuleHotspots();
       renderModuleDetail();
+      renderFactoryMedia();
     }
 
     const systemButton = event.target.closest('[data-system]');
@@ -737,6 +842,7 @@ function bindEvents() {
       state.system = systemButton.dataset.system;
       renderSystemList();
       renderSystemDetail();
+      renderEngineeringMedia();
     }
 
     const presetButton = event.target.closest('[data-finance-preset]');
@@ -746,16 +852,6 @@ function bindEvents() {
         state.finance = { ...preset.values };
         updateFinanceOutputs();
       }
-    }
-
-    const chainDetailsToggle = event.target.closest('.reference-toggle > summary');
-    if (chainDetailsToggle) {
-      const details = chainDetailsToggle.closest('.reference-toggle');
-      if (details instanceof HTMLDetailsElement) {
-        details.open = !details.open;
-        chainDetailsToggle.setAttribute('aria-expanded', String(details.open));
-      }
-      event.preventDefault();
     }
   });
 
