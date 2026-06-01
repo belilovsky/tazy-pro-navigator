@@ -168,12 +168,20 @@ img {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr);
   align-items: center;
+  min-width: 0;
   min-height: 40px;
   padding: 8px 10px;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   color: var(--color-ink);
   text-decoration: none;
+}
+
+.side-nav__link span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .side-nav__link:hover {
@@ -979,7 +987,7 @@ img {
 .section {
   margin-top: 18px;
   padding: 20px;
-  scroll-margin-top: 18px;
+  scroll-margin-top: 86px;
 }
 
 .section-head {
@@ -1175,7 +1183,8 @@ img {
 
 .equipment-table {
   width: 100%;
-  min-width: 920px;
+  table-layout: fixed;
+  min-width: 0;
   border-collapse: collapse;
   background: var(--color-paper);
 }
@@ -1195,6 +1204,33 @@ img {
   border-bottom: 1px solid var(--color-border);
   text-align: left;
   vertical-align: top;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.equipment-table th {
+  font-size: 11px;
+}
+
+.equipment-table th:first-child {
+  width: 9%;
+}
+
+.equipment-table th:nth-child(2) {
+  width: 30%;
+}
+
+.equipment-table th:nth-child(3) {
+  width: 14%;
+}
+
+.equipment-table th:nth-child(4) {
+  width: 28%;
+}
+
+.equipment-table th:nth-child(5) {
+  width: 19%;
 }
 
 .equipment-table thead th {
@@ -1758,18 +1794,28 @@ dd {
   }
 
   .side-nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 4px;
+    overflow-x: visible;
+    width: 100%;
+    padding-bottom: 0;
   }
 
   .side-nav__link {
     flex: 0 0 auto;
+    width: 100%;
     grid-template-columns: auto auto;
     column-gap: 7px;
     min-height: 36px;
     padding: 6px 8px;
+    max-width: 100%;
+  }
+
+  .side-nav__link span:last-child {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
 
   .quick-panel {
@@ -1880,6 +1926,15 @@ dd {
 
   .side-nav__link {
     grid-template-columns: auto;
+  }
+
+  .section-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .section-head p {
+    max-width: none;
+    justify-self: stretch;
   }
 
   .detail-columns,
