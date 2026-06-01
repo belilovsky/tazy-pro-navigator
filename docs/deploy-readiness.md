@@ -36,7 +36,7 @@ PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js node script
 
 ```bash
 ./scripts/deploy-tazy-pro.sh
-curl -sI https://tazy.pro/
+PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js ./scripts/verify-live.sh
 ```
 
 По умолчанию сборка оставляет `robots.txt` с `Disallow: /`, потому что это инвестиционно-инженерный cockpit, а не публичный SEO-лендинг. Для публичной индексации собирать так:
@@ -44,6 +44,12 @@ curl -sI https://tazy.pro/
 ```bash
 TAZY_ROBOTS=public node scripts/build-static.mjs
 ```
+
+## GitHub
+
+Код навигатора отправлен в `belilovsky/tazy-pro` отдельной веткой `project-navigator-static`.
+
+Это сделано намеренно: `main` существующего репозитория сейчас содержит TAZY.DOG / породную платформу, а TAZY.PRO Project Navigator является отдельным investment-engineering cockpit. Мержить ветку в `main` стоит только после решения о структуре репозиториев: отдельный private repo, monorepo-папка или замена текущего публичного сайта.
 
 ## Security notes
 

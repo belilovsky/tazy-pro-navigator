@@ -22,6 +22,18 @@ python3 -m http.server 4181
 PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js node scripts/browser-smoke.mjs
 ```
 
+## Production
+
+Канонический домен: `https://tazy.pro/`.
+
+```bash
+./scripts/deploy-tazy-pro.sh
+PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js ./scripts/verify-live.sh
+```
+
+GitHub-хранение кода: `belilovsky/tazy-pro`, отдельная ветка `project-navigator-static`.
+`main` в этом репозитории пока относится к платформе TAZY.DOG, поэтому ветка навигатора намеренно не мержится в `main` без отдельного решения.
+
 ## Structure
 
 - `index.html` — shell приложения.
