@@ -306,7 +306,7 @@ function renderChain() {
         <p>Сводная схема помогает быстро объяснить инвестору, банку и проектировщику, где именно появляются внутренние ингредиенты, лакомства, сухой корм и готовая партия.</p>
         <figure class="stage-sheet">
           <img
-            src="./assets/drafts/production-chain.png"
+            src="./assets/generated/production-chain.png"
             alt="Полная производственная цепочка TAZY.PRO от сырья до готового корма и экспортной доставки."
             width="1672"
             height="941"

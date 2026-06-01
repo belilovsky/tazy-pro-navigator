@@ -19,10 +19,10 @@ import {
 
 const requiredAssets = [
   'manifest.webmanifest',
-  'assets/drafts/factory-cutaway.png',
-  'assets/drafts/production-chain.png',
-  'assets/drafts/engineering-plan.png',
-  'assets/drafts/dashboard-overview.png'
+  'assets/generated/factory-cutaway.png',
+  'assets/generated/production-chain.png',
+  'assets/generated/engineering-plan.png',
+  'assets/generated/overview-hero.png'
 ];
 
 const errors = [];

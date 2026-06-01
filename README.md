@@ -40,7 +40,8 @@ PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js ./scripts/v
 - `styles.css` — AV DS-подобный light industrial UI.
 - `src/data.js` — проектные данные и справочники.
 - `src/app.js` — render/state/interactions.
-- `assets/drafts/` — текущие визуальные зарисовки как временные ассеты.
+- `assets/generated/` — текущий рабочий набор визуальных ассетов, сгенерированный через `gpt image 2`.
+- `assets/drafts/` — сохранённые ранние зарисовки и исторические референсы.
 - `docs/product-brief.md` — решение по границам продукта и следующим шагам.
 - `docs/deploy-readiness.md` — что готово к деплою и что решается после выбора домена.
 - `docs/repository-ops.md` — рабочая схема GitHub/remotes/release-прохода.
