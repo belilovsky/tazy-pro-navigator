@@ -212,7 +212,7 @@ img {
   border-top: 1px solid var(--color-border);
 }
 
-.quick-panel h3 {
+.quick-panel__title {
   margin: 0;
   color: var(--color-muted);
   font-size: 12px;

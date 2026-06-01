@@ -243,7 +243,7 @@ function renderChain() {
       <figcaption>Главная производственная модель: клик по модулю ниже открывает инженерную карточку.</figcaption>
     </figure>
     <div class="chain-chip-grid" aria-label="Модули выбранного этапа">
-      ${chainModules.slice(0, 14).map((item) => `
+      ${chainModules.map((item) => `
         <button class="chain-chip ${state.module === item.id ? 'is-active' : ''}" type="button" data-module="${item.id}" aria-pressed="${state.module === item.id}">
           <span>${escapeHtml(item.id)}</span>
           <strong>${escapeHtml(item.name)}</strong>
