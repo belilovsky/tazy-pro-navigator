@@ -48,9 +48,9 @@ TAZY_ROBOTS=public node scripts/build-static.mjs
 
 ## GitHub
 
-Код навигатора отправлен в `belilovsky/tazy-pro` отдельной веткой `project-navigator-static`.
+Код навигатора вынесен в отдельный репозиторий `belilovsky/tazy-pro-navigator`, ветка `main`.
 
-Это сделано намеренно: `main` существующего репозитория сейчас содержит TAZY.DOG / породную платформу, а TAZY.PRO Project Navigator является отдельным investment-engineering cockpit. Мержить ветку в `main` стоит только после решения о структуре репозиториев: отдельный private repo, monorepo-папка или замена текущего публичного сайта.
+Старый репозиторий `belilovsky/tazy-pro` сохранён локально как `legacy-tazy-pro`, потому что его `main` относится к TAZY.DOG / породной платформе и не должен смешиваться с investment-engineering cockpit.
 
 ## Security notes
 

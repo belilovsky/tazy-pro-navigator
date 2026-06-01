@@ -25,14 +25,14 @@ PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js node script
 ## Production
 
 Канонический домен: `https://tazy.pro/`.
+Основной GitHub-репозиторий: `https://github.com/belilovsky/tazy-pro-navigator`.
 
 ```bash
 ./scripts/deploy-tazy-pro.sh
 PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js ./scripts/verify-live.sh
 ```
 
-GitHub-хранение кода: `belilovsky/tazy-pro`, отдельная ветка `project-navigator-static`.
-`main` в этом репозитории пока относится к платформе TAZY.DOG, поэтому ветка навигатора намеренно не мержится в `main` без отдельного решения.
+Локально сохранён legacy-remote `legacy-tazy-pro`, чтобы не потерять связь с историческим репозиторием `belilovsky/tazy-pro`, где `main` относится к TAZY.DOG.
 
 ## Structure
 
@@ -43,5 +43,21 @@ GitHub-хранение кода: `belilovsky/tazy-pro`, отдельная ве
 - `assets/drafts/` — текущие визуальные зарисовки как временные ассеты.
 - `docs/product-brief.md` — решение по границам продукта и следующим шагам.
 - `docs/deploy-readiness.md` — что готово к деплою и что решается после выбора домена.
+- `docs/repository-ops.md` — рабочая схема GitHub/remotes/release-прохода.
 - `ops/nginx-basic-auth.conf.example` — пример закрытого доступа на nginx.
 - `ops/tazy-pro-nginx.conf` — воспроизводимый фрагмент текущего server block для `tazy.pro`.
+
+## Repository Workflow
+
+```bash
+git status
+./scripts/check.sh
+node scripts/build-static.mjs
+git push origin main
+```
+
+Для live-проверки после деплоя:
+
+```bash
+PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js ./scripts/verify-live.sh
+```

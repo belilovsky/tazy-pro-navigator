@@ -1,7 +1,14 @@
 {
   "name": "tazy-pro-navigator",
   "version": "0.1.0",
+  "description": "Static cockpit for TAZY.PRO project navigator deployment, QA, and operational docs.",
+  "homepage": "https://tazy.pro/",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/belilovsky/tazy-pro-navigator.git"
+  },
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 4181",
