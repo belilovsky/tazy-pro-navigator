@@ -44,3 +44,4 @@ GitHub-хранение кода: `belilovsky/tazy-pro`, отдельная ве
 - `docs/product-brief.md` — решение по границам продукта и следующим шагам.
 - `docs/deploy-readiness.md` — что готово к деплою и что решается после выбора домена.
 - `ops/nginx-basic-auth.conf.example` — пример закрытого доступа на nginx.
+- `ops/tazy-pro-nginx.conf` — воспроизводимый фрагмент текущего server block для `tazy.pro`.

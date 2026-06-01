@@ -14,6 +14,7 @@
 - Статическая сборка в `dist/tazy-pro-navigator`.
 - Пример nginx basic auth + CSP: `ops/nginx-basic-auth.conf.example`.
 - Deploy-скрипт для текущего VPS: `scripts/deploy-tazy-pro.sh`.
+- Фактический nginx-фрагмент для домена: `ops/tazy-pro-nginx.conf`.
 
 ## Что нужно решить перед публичным доступом
 
