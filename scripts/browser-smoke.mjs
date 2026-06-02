@@ -32,6 +32,17 @@ for (const width of widths) {
   await page.locator('[data-stage="stage2"]').click();
   await page.locator('[data-module="M4"]').first().click();
   await page.locator('[data-audience="bank"]').click();
+
+  let financeNavTop = null;
+  if (width <= 390) {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.locator('[data-nav-link="finance"]').click();
+    await page.waitForTimeout(150);
+    financeNavTop = await page.evaluate(() =>
+      Math.round(document.querySelector('#finance')?.getBoundingClientRect().top ?? -1)
+    );
+  }
+
   await page.locator('#finance').scrollIntoViewIfNeeded();
   await page.locator('[data-finance-preset="upside"]').evaluate((element) => element.click());
   await page.locator('#carcasses').evaluate((element) => {
@@ -58,6 +69,7 @@ for (const width of widths) {
     h1Count: document.querySelectorAll('h1').length,
     navActive: document.querySelectorAll('[data-nav-link].is-active').length
   }));
+  metrics.financeNavTop = financeNavTop;
 
   results.push({ width, errors, metrics });
   await page.close();
@@ -70,6 +82,7 @@ const failed = results.some((item) =>
   item.metrics.overflow ||
   item.metrics.navActive !== 1 ||
   item.metrics.h1Count !== 1 ||
+  (item.width <= 390 && (item.metrics.financeNavTop === null || item.metrics.financeNavTop > 120)) ||
   item.metrics.stageActive !== 'stage2' ||
   !item.metrics.activeChainChips.includes('M4') ||
   item.metrics.chainChipCount === 0

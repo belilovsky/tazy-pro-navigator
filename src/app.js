@@ -172,10 +172,13 @@ function renderNavigation() {
 
 function syncActiveNavLink(activeLink) {
   if (!activeLink || !compactNav.matches) return;
-  activeLink.scrollIntoView({
-    behavior: reducedMotion.matches ? 'auto' : 'smooth',
-    block: 'nearest',
-    inline: 'center'
+
+  const nav = activeLink.closest('.side-nav');
+  if (!nav || nav.scrollWidth <= nav.clientWidth) return;
+
+  nav.scrollTo({
+    left: activeLink.offsetLeft - (nav.clientWidth - activeLink.clientWidth) / 2,
+    behavior: reducedMotion.matches ? 'auto' : 'smooth'
   });
 }
 
@@ -192,6 +195,10 @@ function setActiveNavLink(activeId) {
     }
   });
   syncActiveNavLink(activeLink);
+}
+
+function sectionScrollBehavior() {
+  return reducedMotion.matches || compactNav.matches ? 'auto' : 'smooth';
 }
 
 function updateActiveNavFromScroll() {
@@ -859,13 +866,21 @@ function bindEvents() {
   document.addEventListener('click', (event) => {
     const navLink = event.target.closest('[data-nav-link]');
     if (navLink) {
-      setActiveNavLink(navLink.dataset.navLink);
+      event.preventDefault();
+      const targetId = navLink.dataset.navLink;
+      setActiveNavLink(targetId);
+      document.getElementById(targetId)?.scrollIntoView({
+        behavior: sectionScrollBehavior(),
+        block: 'start'
+      });
+      window.history.pushState(null, '', `#${targetId}`);
     }
 
     const scrollButton = event.target.closest('[data-scroll-target]');
     if (scrollButton) {
+      event.preventDefault();
       $(`#${scrollButton.dataset.scrollTarget}`)?.scrollIntoView({
-        behavior: reducedMotion.matches ? 'auto' : 'smooth',
+        behavior: sectionScrollBehavior(),
         block: 'start'
       });
     }
