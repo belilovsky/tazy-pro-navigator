@@ -25,9 +25,9 @@
   --destructive-foreground: 0 0% 99%;
   --input: 212 29% 74%;
   --ring: 207 79% 28%;
-  --font-sans: "IBM Plex Sans", "Inter", "Onest", "Helvetica Neue", system-ui, sans-serif;
-  --font-serif: "IBM Plex Serif", ui-serif, serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --font-sans: "Rubik", "Inter", "Onest", "Helvetica Neue", system-ui, sans-serif;
+  --font-serif: "Rubik", "Inter", "Onest", system-ui, sans-serif;
+  --font-mono: "Rubik", "Inter", ui-monospace, Menlo, monospace;
   --color-bg: #f3f7fb;
   --color-bg-subtle: #e8f0f7;
   --color-paper: #ffffff;
