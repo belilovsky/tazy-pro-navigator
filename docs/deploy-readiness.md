@@ -9,7 +9,7 @@
 - Статический shell без внешних CDN и без сборки.
 - Данные вынесены в `src/data.js`.
 - Smoke-проверка desktop/tablet/mobile вынесена в `scripts/browser-smoke.mjs`.
-- Smoke проверяет audience mode, stage/module selection, finance preset и отсутствие горизонтального overflow.
+- Smoke проверяет режим аудитории, выбор этапа и модуля, финансовый сценарий и отсутствие горизонтального overflow.
 - Рабочие визуальные ассеты лежат в `assets/generated/`: страница использует WebP, PNG сохранены как исходники и OG-изображение.
 - Статическая сборка в `dist/tazy-pro-navigator`.
 - Пример nginx basic auth + CSP: `ops/nginx-basic-auth.conf.example`.
@@ -19,10 +19,10 @@
 ## Что нужно решить перед публичным доступом
 
 1. Контур закрытого доступа: Cloudflare Access, nginx basic auth или qdev auth gateway.
-2. Где хранится настоящая document room: qdev storage, backend API или защищённая папка.
+2. Где хранится настоящая комната документов: qdev-хранилище, серверный API или защищённая папка.
 3. Реальная финансовая модель как отдельный JSON/таблица.
-4. При необходимости добрать отдельный пакет визуалов под investor deck, PDF-экспорт и реальные документы data room.
-5. Журнал просмотров/скачиваний для investor interest tracking.
+4. При необходимости добрать отдельный пакет визуалов под инвесторскую презентацию, PDF-экспорт и реальные документы комнаты документов.
+5. Журнал просмотров/скачиваний для фиксации интереса инвесторов.
 
 ## Минимальный preflight перед деплоем
 
@@ -40,7 +40,7 @@ PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js node script
 PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js ./scripts/verify-live.sh
 ```
 
-По умолчанию сборка оставляет `robots.txt` с `Disallow: /`, потому что это инвестиционно-инженерный cockpit, а не публичный SEO-лендинг. Для публичной индексации собирать так:
+По умолчанию сборка оставляет `robots.txt` с `Disallow: /`, потому что это инвестиционно-инженерный навигатор, а не публичный SEO-лендинг. Для публичной индексации собирать так:
 
 ```bash
 TAZY_ROBOTS=public node scripts/build-static.mjs
@@ -50,8 +50,8 @@ TAZY_ROBOTS=public node scripts/build-static.mjs
 
 Код навигатора вынесен в отдельный репозиторий `belilovsky/tazy-pro-navigator`, ветка `main`.
 
-Старый репозиторий `belilovsky/tazy-pro` сохранён локально как `legacy-tazy-pro`, потому что его `main` относится к TAZY.DOG / породной платформе и не должен смешиваться с investment-engineering cockpit.
+Старый репозиторий `belilovsky/tazy-pro` сохранён локально как `legacy-tazy-pro`, потому что его `main` относится к TAZY.DOG / породной платформе и не должен смешиваться с инвестиционно-инженерным навигатором.
 
 ## Security notes
 
-Клиентский пароль внутри HTML/JS не является защитой. Если навигатор должен быть закрытым, доступ нужно закрывать на уровне edge/nginx/backend, а не в браузере.
+Клиентский пароль внутри HTML/JS не является защитой. Если навигатор должен быть закрытым, доступ нужно закрывать на уровне edge, nginx или серверного контура, а не в браузере.

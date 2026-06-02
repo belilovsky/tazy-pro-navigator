@@ -18,7 +18,7 @@ import {
   qualityTrace,
   stageTabs,
   thesis
-} from './data.js';
+} from './data.js?v=20260602-content3';
 
 const state = {
   audience: 'investor',
@@ -45,7 +45,7 @@ const FINANCE_CONTROLS = [
   ['vendorDelay', 'Отсрочка поставщика', 0, 8, 1, 'мес.'],
   ['stage3Month', 'Запуск этапа 3', 8, 24, 1, 'мес.'],
   ['fx', 'Курс валюты для оборудования', 440, 650, 5, '₸/$'],
-  ['b2cShare', 'Доля B2C', 10, 80, 5, '%']
+  ['b2cShare', 'Доля прямых продаж', 10, 80, 5, '%']
 ];
 
 const CONSTRUCTOR_LANES = [
@@ -87,8 +87,26 @@ const SYSTEM_GROUPS = [
   ['Энергия', 'P1, P2, P4'],
   ['Среда и стоки', 'P3, P5, P6, P9'],
   ['Воздух и ESG', 'P7, P8'],
-  ['Digital', 'P10']
+  ['Данные', 'P10']
 ];
+
+const GATE_STATUS_LABELS = {
+  critical: 'критично',
+  high: 'высокий',
+  medium: 'средний',
+  open: 'открыто',
+  next: 'следующий',
+  later: 'позже',
+  blocker: 'блокер'
+};
+
+const DOCUMENT_STATUS_LABELS = {
+  draft: 'черновик',
+  'needs-model': 'нужна модель',
+  open: 'открыто',
+  blocker: 'блокер',
+  later: 'позже'
+};
 
 function escapeHtml(value) {
   return String(value)
@@ -274,7 +292,7 @@ function renderHeroMetrics() {
     ['Фокус', audience.primaryMetric],
     ['Первый транш', '60–70 млн ₸'],
     ['Базовый CAPEX', '≈162 млн ₸'],
-    ['Deal-breaker', 'сырьё 36–60 мес.']
+    ['Ключевой блокер', 'сырьё 36–60 мес.']
   ].map(([label, value]) => `
     <div class="hero-metric">
       <span>${escapeHtml(label)}</span>
@@ -360,7 +378,7 @@ function renderChain() {
         </figure>
         <div class="stage-constructor__actions">
           <span>${escapeHtml(stage.label)} · ${fmt.format(stage.modules.length)} активных модулей</span>
-          <button class="ghost-button ghost-button--compact" type="button" data-scroll-target="factory">Открыть cutaway</button>
+          <button class="ghost-button ghost-button--compact" type="button" data-scroll-target="factory">Открыть схему завода</button>
         </div>
       </aside>
     </div>
@@ -631,7 +649,7 @@ function sparkline(values, type = 'line') {
     const barWidth = Math.max(22, (width - 70) / values.length - 10);
     const zeroY = height - 28 - ((0 - min) / range) * (height - 62);
     return `
-      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Столбчатый график cash flow">
+      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Столбчатый график денежного потока">
         <line x1="24" y1="${zeroY}" x2="${width - 24}" y2="${zeroY}" />
         ${points.map(([x, y, value]) => `
           <rect x="${x - barWidth / 2}" y="${Math.min(y, zeroY)}" width="${barWidth}" height="${Math.abs(zeroY - y)}" rx="5" class="${value < 0 ? 'is-negative' : ''}"></rect>
@@ -658,9 +676,9 @@ function renderFinanceOutput() {
     ['CAPEX', formatMoney(result.capex), 'с учётом валютной чувствительности'],
     ['Выручка год 3', formatMoney(result.revenue), 'управленческая модель'],
     ['EBITDA', formatMoney(result.ebitda), 'при текущих параметрах'],
-    ['Payback', `${result.payback.toFixed(1).replace('.', ',')} года`, `DSCR ${result.dscr.toFixed(2).replace('.', ',')}`],
+    ['Окупаемость', `${result.payback.toFixed(1).replace('.', ',')} года`, `DSCR ${result.dscr.toFixed(2).replace('.', ',')}`],
     ['Потребность в ликвидности', formatMoney(result.liquidityNeed), 'пик модели с обороткой'],
-    ['B2C-множитель', result.channelFactor.toFixed(2).replace('.', ','), 'маржа выше, оборотка тяжелее']
+    ['Канал продаж', result.channelFactor.toFixed(2).replace('.', ','), 'прямые продажи повышают маржу, но утяжеляют оборотку']
   ].map(([label, value, note]) => `
     <article class="scenario-card">
       <span>${escapeHtml(label)}</span>
@@ -672,19 +690,19 @@ function renderFinanceOutput() {
   $('#revenueChart').innerHTML = `
     <div class="chart-card__head">
       <h3>Выручка по годам</h3>
-      <span>Y1–Y5</span>
+      <span>Г1–Г5</span>
     </div>
     ${sparkline(years)}
-    <div class="chart-legend">${years.map((value, index) => `<span>Y${index + 1}: ${formatMoney(value)}</span>`).join('')}</div>
+    <div class="chart-legend">${years.map((value, index) => `<span>Г${index + 1}: ${formatMoney(value)}</span>`).join('')}</div>
   `;
 
   $('#cashflowChart').innerHTML = `
     <div class="chart-card__head">
-      <h3>Cash flow 18–24 мес.</h3>
+      <h3>Денежный поток 18–24 мес.</h3>
       <span>демо</span>
     </div>
     ${sparkline(cashflow, 'bar')}
-    <div class="chart-legend">${cashflow.map((value, index) => `<span>M${(index + 1) * 4}: ${formatMoney(value)}</span>`).join('')}</div>
+    <div class="chart-legend">${cashflow.map((value, index) => `<span>М${(index + 1) * 4}: ${formatMoney(value)}</span>`).join('')}</div>
   `;
 }
 
@@ -752,8 +770,8 @@ function renderQuality() {
       <div><dt>Фракция</dt><dd>${escapeHtml(batch.fraction)}</dd></div>
       <div><dt>Температура приёмки</dt><dd>${escapeHtml(batch.receptionTemp)}</dd></div>
       <div><dt>Зона обработки</dt><dd>${escapeHtml(batch.zone)}</dd></div>
-      <div><dt>Kill-step</dt><dd>${escapeHtml(batch.killStep)}</dd></div>
-      <div><dt>Aw</dt><dd>${escapeHtml(batch.aw)}</dd></div>
+      <div><dt>Термобарьер</dt><dd>${escapeHtml(batch.killStep)}</dd></div>
+      <div><dt>Aw / активность воды</dt><dd>${escapeHtml(batch.aw)}</dd></div>
       <div><dt>Лаборатория</dt><dd>${escapeHtml(batch.lab)}</dd></div>
       <div><dt>Упаковка</dt><dd>${escapeHtml(batch.packaging)}</dd></div>
       <div><dt>Склад</dt><dd>${escapeHtml(batch.warehouse)}</dd></div>
@@ -791,7 +809,7 @@ function renderGates() {
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.note)}</p>
       </div>
-      <span>${escapeHtml(item.status)}</span>
+      <span>${escapeHtml(GATE_STATUS_LABELS[item.status] ?? item.status)}</span>
     </article>
   `).join('');
 }
@@ -804,7 +822,7 @@ function renderDocuments() {
         <h3>${escapeHtml(item.folder)}</h3>
         <span>${fmt.format(item.count)}</span>
       </div>
-      <strong>${escapeHtml(item.status)}</strong>
+      <strong>${escapeHtml(DOCUMENT_STATUS_LABELS[item.status] ?? item.status)}</strong>
       <p>${escapeHtml(item.items.join(' · '))}</p>
     </article>
   `).join('');

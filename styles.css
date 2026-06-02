@@ -1104,11 +1104,11 @@ img {
   font-weight: 700;
 }
 
-.path-step[data-status="deal-breaker"] {
+.path-step[data-status="blocker"] {
   border-color: color-mix(in srgb, var(--color-red) 28%, var(--color-border));
 }
 
-.path-step[data-status="deal-breaker"] > span {
+.path-step[data-status="blocker"] > span {
   background: color-mix(in srgb, var(--color-red) 10%, white);
   color: var(--color-red);
 }
@@ -2012,11 +2012,11 @@ dd {
   letter-spacing: 0.03em;
 }
 
-.document-card[data-status="deal-breaker"] {
+.document-card[data-status="blocker"] {
   border-color: color-mix(in srgb, var(--color-red) 24%, var(--color-border));
 }
 
-.document-card[data-status="deal-breaker"] > strong {
+.document-card[data-status="blocker"] > strong {
   background: color-mix(in srgb, var(--color-red) 10%, white);
   color: var(--color-red);
 }
@@ -2185,7 +2185,30 @@ dd {
 
 @media (max-width: 720px) {
   .sidebar {
+    position: static;
     box-shadow: var(--shadow-sm);
+  }
+
+  .side-nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+    padding-bottom: 0;
+    scroll-snap-type: none;
+  }
+
+  .side-nav__link {
+    justify-content: center;
+    min-width: 0;
+    min-height: 36px;
+    padding: 7px 8px;
+    text-align: center;
+    scroll-snap-align: none;
+  }
+
+  .side-nav__link span:last-child {
+    overflow: visible;
+    white-space: normal;
   }
 
   .workspace {
