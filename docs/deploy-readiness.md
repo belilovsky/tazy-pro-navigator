@@ -10,7 +10,7 @@
 - Данные вынесены в `src/data.js`.
 - Smoke-проверка desktop/tablet/mobile вынесена в `scripts/browser-smoke.mjs`.
 - Smoke проверяет audience mode, stage/module selection, finance preset и отсутствие горизонтального overflow.
-- Рабочие визуальные ассеты лежат в `assets/generated/`; ранние референсы сохранены в `assets/drafts/`.
+- Рабочие визуальные ассеты лежат в `assets/generated/`: страница использует WebP, PNG сохранены как исходники и OG-изображение.
 - Статическая сборка в `dist/tazy-pro-navigator`.
 - Пример nginx basic auth + CSP: `ops/nginx-basic-auth.conf.example`.
 - Deploy-скрипт для текущего VPS: `scripts/deploy-tazy-pro.sh`.
@@ -21,7 +21,7 @@
 1. Контур закрытого доступа: Cloudflare Access, nginx basic auth или qdev auth gateway.
 2. Где хранится настоящая document room: qdev storage, backend API или защищённая папка.
 3. Реальная финансовая модель как отдельный JSON/таблица.
-4. При необходимости добрать второй пакет согласованных рендеров под новые разделы и экспортные материалы.
+4. При необходимости добрать отдельный пакет визуалов под investor deck, PDF-экспорт и реальные документы data room.
 5. Журнал просмотров/скачиваний для investor interest tracking.
 
 ## Минимальный preflight перед деплоем

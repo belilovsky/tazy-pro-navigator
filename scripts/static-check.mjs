@@ -19,10 +19,15 @@ import {
 
 const requiredAssets = [
   'manifest.webmanifest',
-  'assets/generated/factory-cutaway.png',
-  'assets/generated/production-chain.png',
-  'assets/generated/engineering-plan.png',
-  'assets/generated/overview-hero.png'
+  'assets/generated/overview-hero.png',
+  'assets/generated/factory-cutaway.webp',
+  'assets/generated/production-chain.webp',
+  'assets/generated/engineering-plan.webp',
+  'assets/generated/overview-hero.webp',
+  'assets/generated/market-access.webp',
+  'assets/generated/product-lineup.webp',
+  'assets/generated/quality-passport.webp',
+  'assets/generated/data-room.webp'
 ];
 
 const errors = [];

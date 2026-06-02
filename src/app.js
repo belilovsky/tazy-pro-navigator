@@ -33,6 +33,7 @@ const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 const fmt = new Intl.NumberFormat('ru-RU');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const compactNav = window.matchMedia('(max-width: 720px)');
 
 const FINANCE_CONTROLS = [
   ['carcasses', 'Туш в сутки', 8, 48, 1, 'шт.'],
@@ -145,6 +146,44 @@ function renderNavigation() {
       <span>${escapeHtml(label)}</span>
     </a>
   `).join('');
+}
+
+function syncActiveNavLink(activeLink) {
+  if (!activeLink || !compactNav.matches) return;
+  activeLink.scrollIntoView({
+    behavior: reducedMotion.matches ? 'auto' : 'smooth',
+    block: 'nearest',
+    inline: 'center'
+  });
+}
+
+function setActiveNavLink(activeId) {
+  let activeLink = null;
+  $$('[data-nav-link]').forEach((link) => {
+    const active = link.dataset.navLink === activeId;
+    link.classList.toggle('is-active', active);
+    if (active) {
+      link.setAttribute('aria-current', 'page');
+      activeLink = link;
+    } else {
+      link.removeAttribute('aria-current');
+    }
+  });
+  syncActiveNavLink(activeLink);
+}
+
+function updateActiveNavFromScroll() {
+  const activationLine = Math.min(window.innerHeight * 0.28, 220);
+  let activeId = navigation[0]?.[0];
+
+  navigation.forEach(([id]) => {
+    const section = $(`#${id}`);
+    if (section && section.getBoundingClientRect().top <= activationLine) {
+      activeId = id;
+    }
+  });
+
+  setActiveNavLink(activeId);
 }
 
 function renderAudienceControls() {
@@ -306,7 +345,7 @@ function renderChain() {
         <p>Сводная схема помогает быстро объяснить инвестору, банку и проектировщику, где именно появляются внутренние ингредиенты, лакомства, сухой корм и готовая партия.</p>
         <figure class="stage-sheet">
           <img
-            src="./assets/generated/production-chain.png"
+            src="./assets/generated/production-chain.webp"
             alt="Полная производственная цепочка TAZY.PRO от сырья до готового корма и экспортной доставки."
             width="1672"
             height="941"
@@ -796,6 +835,11 @@ function renderStaticSections() {
 
 function bindEvents() {
   document.addEventListener('click', (event) => {
+    const navLink = event.target.closest('[data-nav-link]');
+    if (navLink) {
+      setActiveNavLink(navLink.dataset.navLink);
+    }
+
     const scrollButton = event.target.closest('[data-scroll-target]');
     if (scrollButton) {
       $(`#${scrollButton.dataset.scrollTarget}`)?.scrollIntoView({
@@ -862,28 +906,19 @@ function bindEvents() {
     }
   });
 
-  const observer = new IntersectionObserver((entries) => {
-    const visible = entries
-      .filter((entry) => entry.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  let navSyncQueued = false;
+  const queueNavSync = () => {
+    if (navSyncQueued) return;
+    navSyncQueued = true;
+    window.requestAnimationFrame(() => {
+      navSyncQueued = false;
+      updateActiveNavFromScroll();
+    });
+  };
 
-    if (visible) {
-      $$('[data-nav-link]').forEach((link) => {
-        const active = link.dataset.navLink === visible.target.id;
-        link.classList.toggle('is-active', active);
-        if (active) {
-          link.setAttribute('aria-current', 'page');
-        } else {
-          link.removeAttribute('aria-current');
-        }
-      });
-    }
-  }, { rootMargin: '-20% 0px -60% 0px', threshold: [0.1, 0.35, 0.6] });
-
-  navigation.forEach(([id]) => {
-    const section = $(`#${id}`);
-    if (section) observer.observe(section);
-  });
+  window.addEventListener('scroll', queueNavSync, { passive: true });
+  window.addEventListener('resize', queueNavSync);
+  updateActiveNavFromScroll();
 }
 
 function boot() {
