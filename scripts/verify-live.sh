@@ -5,7 +5,7 @@ URL="${TAZY_NAVIGATOR_URL:-https://tazy.pro/}"
 PLAYWRIGHT_MODULE="${PLAYWRIGHT_MODULE:-}"
 
 curl -fsSI "$URL" | grep -E '^HTTP/|^content-security-policy:|^x-frame-options:|^x-content-type-options:|^referrer-policy:' -i
-curl -fsSL "$URL" | grep -q 'TAZY.PRO Project Navigator'
+curl -fsSL "$URL" | grep -q 'TAZY.PRO — навигатор проекта'
 curl -fsSL "${URL%/}/manifest.webmanifest" | grep -q '"id": "https://tazy.pro/"'
 curl -fsSL "${URL%/}/robots.txt" | grep -q 'Disallow: /'
 

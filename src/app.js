@@ -33,7 +33,7 @@ const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 const fmt = new Intl.NumberFormat('ru-RU');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-const compactNav = window.matchMedia('(max-width: 720px)');
+const compactNav = window.matchMedia('(max-width: 1040px)');
 
 const FINANCE_CONTROLS = [
   ['carcasses', 'Туш в сутки', 8, 48, 1, 'шт.'],
@@ -43,7 +43,7 @@ const FINANCE_CONTROLS = [
   ['capex', 'CAPEX по этапам', 130, 230, 1, 'млн ₸'],
   ['loanRate', 'Ставка кредита', 8, 28, 0.5, '%'],
   ['vendorDelay', 'Отсрочка поставщика', 0, 8, 1, 'мес.'],
-  ['stage3Month', 'Запуск Stage 3', 8, 24, 1, 'мес.'],
+  ['stage3Month', 'Запуск этапа 3', 8, 24, 1, 'мес.'],
   ['fx', 'Курс валюты для оборудования', 440, 650, 5, '₸/$'],
   ['b2cShare', 'Доля B2C', 10, 80, 5, '%']
 ];
@@ -52,6 +52,7 @@ const CONSTRUCTOR_LANES = [
   {
     id: 'raw',
     label: 'Сырьё',
+    badge: 'Сырьё',
     description: 'Приёмка, холод, мойка и первичная подготовка под технологический цикл.',
     accent: 'orange',
     modules: ['M0', 'M1', 'M2', 'M3']
@@ -59,6 +60,7 @@ const CONSTRUCTOR_LANES = [
   {
     id: 'ingredients',
     label: 'Внутренние ингредиенты',
+    badge: 'Ингредиенты',
     description: 'Рендеринг, санитарный барьер и инженерный слой, который делает контур замкнутым.',
     accent: 'amber',
     modules: ['M4', 'M5', 'M13', 'M14']
@@ -66,6 +68,7 @@ const CONSTRUCTOR_LANES = [
   {
     id: 'treats',
     label: 'Линия лакомств',
+    badge: 'Лакомства',
     description: 'Параллельная ранняя выручка без ожидания полной экструзионной линии.',
     accent: 'violet',
     modules: ['L1', 'L2', 'L3', 'L4']
@@ -73,6 +76,7 @@ const CONSTRUCTOR_LANES = [
   {
     id: 'feed',
     label: 'Кормовой контур',
+    badge: 'Корм',
     description: 'Смешивание, экструзия, сушка, упаковка и выпуск готовой партии.',
     accent: 'blue',
     modules: ['M6', 'M7', 'M8', 'M9', 'M10', 'M11', 'M12', 'M16']
@@ -325,7 +329,7 @@ function renderChain() {
                 <span>${escapeHtml(lane.label)}</span>
                 <strong>${fmt.format(lane.items.length)} модул${lane.items.length === 1 ? 'ь' : lane.items.length < 5 ? 'я' : 'ей'}</strong>
               </div>
-              <small>${escapeHtml(lane.id.toUpperCase())}</small>
+              <small>${escapeHtml(lane.badge)}</small>
             </div>
             <p>${escapeHtml(lane.description)}</p>
             <div class="constructor-lane__chips">
