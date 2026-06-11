@@ -37,7 +37,7 @@ const requiredAssets = [
 
 const errors = [];
 const moduleIds = new Set(modules.map((item) => item.id));
-const releaseToken = '20260612-qa1';
+const releaseToken = '20260612-sections3';
 const indexHtml = await readFile('index.html', 'utf8');
 const appJs = await readFile('src/app.js', 'utf8');
 

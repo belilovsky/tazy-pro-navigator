@@ -22,7 +22,7 @@ import {
   siteConstraints,
   stageTabs,
   thesis
-} from './data.js?v=20260612-qa1';
+} from './data.js?v=20260612-sections3';
 
 const state = {
   audience: 'investor',
@@ -647,6 +647,7 @@ function renderSimulator() {
         max="${max}"
         step="${step}"
         value="${state.finance[key]}"
+        aria-label="${escapeHtml(label)}"
       >
     </label>
   `).join('');
