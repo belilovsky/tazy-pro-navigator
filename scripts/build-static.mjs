@@ -8,8 +8,19 @@ const files = [
   'favicon.svg',
   'manifest.webmanifest',
   'fonts',
-  'src',
-  'assets'
+  'src'
+];
+
+const generatedAssets = [
+  'overview-hero.png',
+  'factory-cutaway.webp',
+  'production-chain.webp',
+  'engineering-plan.webp',
+  'overview-hero.webp',
+  'market-access.webp',
+  'product-lineup.webp',
+  'quality-passport.webp',
+  'data-room.webp'
 ];
 
 await rm(outDir, { force: true, recursive: true });
@@ -17,6 +28,11 @@ await mkdir(outDir, { recursive: true });
 
 for (const file of files) {
   await cp(file, join(outDir, file), { recursive: true });
+}
+
+await mkdir(join(outDir, 'assets/generated'), { recursive: true });
+for (const asset of generatedAssets) {
+  await cp(join('assets/generated', asset), join(outDir, 'assets/generated', asset));
 }
 
 await writeFile(

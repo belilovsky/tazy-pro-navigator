@@ -29,6 +29,21 @@ for (const width of widths) {
   await page.goto(target, { waitUntil: 'networkidle' });
   await page.screenshot({ path: `/tmp/tazy-pro-navigator-${width}.png`, fullPage: false });
 
+  const initialMetrics = await page.evaluate(() => ({
+    marketSignals: document.querySelectorAll('#marketSignals .evidence-card').length,
+    complianceCards: document.querySelectorAll('#complianceLanes .compliance-card').length,
+    readinessCards: document.querySelectorAll('#readinessGrid .readiness-card').length,
+    siteConstraints: document.querySelectorAll('#siteConstraints .constraint-card').length,
+    m15Rows: Array.from(document.querySelectorAll('#equipmentTable tr'))
+      .filter((row) => row.textContent.includes('M15')).length,
+    baseRevenue: Array.from(document.querySelectorAll('#scenarioCards .scenario-card'))
+      .find((card) => card.textContent.includes('Выручка год 3'))?.querySelector('strong')?.textContent || '',
+    baseEbitda: Array.from(document.querySelectorAll('#scenarioCards .scenario-card'))
+      .find((card) => card.textContent.includes('EBITDA'))?.querySelector('strong')?.textContent || '',
+    basePayback: Array.from(document.querySelectorAll('#scenarioCards .scenario-card'))
+      .find((card) => card.textContent.includes('Окупаемость'))?.querySelector('strong')?.textContent || ''
+  }));
+
   await page.locator('[data-stage="stage2"]').click();
   await page.locator('[data-module="M4"]').first().click();
   await page.locator('[data-audience="bank"]').click();
@@ -71,7 +86,7 @@ for (const width of widths) {
   }));
   metrics.financeNavTop = financeNavTop;
 
-  results.push({ width, errors, metrics });
+  results.push({ width, errors, initialMetrics, metrics });
   await page.close();
 }
 
@@ -80,6 +95,14 @@ await browser.close();
 const failed = results.some((item) =>
   item.errors.length ||
   item.metrics.overflow ||
+  item.initialMetrics.marketSignals !== 4 ||
+  item.initialMetrics.complianceCards !== 4 ||
+  item.initialMetrics.readinessCards !== 4 ||
+  item.initialMetrics.siteConstraints !== 3 ||
+  item.initialMetrics.m15Rows !== 1 ||
+  item.initialMetrics.baseRevenue !== '321 млн ₸' ||
+  item.initialMetrics.baseEbitda !== '46 млн ₸' ||
+  item.initialMetrics.basePayback !== '3,5 года' ||
   item.metrics.navActive !== 1 ||
   item.metrics.h1Count !== 1 ||
   (item.width <= 390 && (item.metrics.financeNavTop === null || item.metrics.financeNavTop > 120)) ||
