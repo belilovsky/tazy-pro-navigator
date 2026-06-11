@@ -1,4 +1,4 @@
-import { access } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import {
   audiences,
   complianceLanes,
@@ -37,6 +37,9 @@ const requiredAssets = [
 
 const errors = [];
 const moduleIds = new Set(modules.map((item) => item.id));
+const releaseToken = '20260612-qa1';
+const indexHtml = await readFile('index.html', 'utf8');
+const appJs = await readFile('src/app.js', 'utf8');
 
 for (const stage of stageTabs) {
   for (const id of stage.modules) {
@@ -107,6 +110,16 @@ for (const asset of requiredAssets) {
   } catch {
     errors.push(`Missing asset: ${asset}`);
   }
+}
+
+if (!indexHtml.includes(`./styles.css?v=${releaseToken}`)) {
+  errors.push(`index.html should cache-bust styles.css with ${releaseToken}`);
+}
+if (!indexHtml.includes(`./src/app.js?v=${releaseToken}`)) {
+  errors.push(`index.html should cache-bust app.js with ${releaseToken}`);
+}
+if (!appJs.includes(`./data.js?v=${releaseToken}`)) {
+  errors.push(`src/app.js should cache-bust data.js with ${releaseToken}`);
 }
 
 if (errors.length) {

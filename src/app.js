@@ -22,7 +22,7 @@ import {
   siteConstraints,
   stageTabs,
   thesis
-} from './data.js?v=20260611-content4';
+} from './data.js?v=20260612-qa1';
 
 const state = {
   audience: 'investor',
