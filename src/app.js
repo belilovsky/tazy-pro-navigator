@@ -2,6 +2,7 @@ import {
   audiences,
   batch,
   careLoop,
+  complianceLanes,
   coreKpis,
   criticalPath,
   dealBreakers,
@@ -11,14 +12,17 @@ import {
   financePresets,
   fundingStack,
   gates,
+  marketSignals,
   markets,
   modules,
   navigation,
   products,
   qualityTrace,
+  readinessLanes,
+  siteConstraints,
   stageTabs,
   thesis
-} from './data.js?v=20260602-content3';
+} from './data.js?v=20260611-content4';
 
 const state = {
   audience: 'investor',
@@ -80,6 +84,14 @@ const CONSTRUCTOR_LANES = [
     description: 'Смешивание, экструзия, сушка, упаковка и выпуск готовой партии.',
     accent: 'blue',
     modules: ['M6', 'M7', 'M8', 'M9', 'M10', 'M11', 'M12', 'M16']
+  },
+  {
+    id: 'support',
+    label: 'Поддержка',
+    badge: 'Сервис',
+    description: 'Офис, санитарный блок и бытовая инфраструктура, без которых линия не проходит рабочий режим.',
+    accent: 'green',
+    modules: ['M15']
   }
 ];
 
@@ -545,7 +557,6 @@ function renderEngineeringMedia() {
 
 function renderEquipmentTable() {
   const rows = modules
-    .filter((item) => !['Поддержка', 'Инженерия / ESG'].includes(item.stage))
     .map((item) => `
       <tr>
         <th scope="row">${escapeHtml(item.id)}</th>
@@ -576,13 +587,14 @@ function calculateFinance() {
   const treatsFactor = f.treatsPrice / financeDefaults.treatsPrice;
   const feedFactor = f.feedPrice / financeDefaults.feedPrice;
   const priceFactor = treatsFactor * 0.34 + feedFactor * 0.66;
-  const channelFactor = 0.92 + (f.b2cShare / 100) * 0.24;
+  const baseChannelFactor = 0.92 + (financeDefaults.b2cShare / 100) * 0.24;
+  const channelFactor = (0.92 + (f.b2cShare / 100) * 0.24) / baseChannelFactor;
   const rawPenalty = (100 - f.freeRaw) * 0.31 * scale;
   const fxFactor = 1 + Math.max(-0.15, Math.min(0.2, (f.fx - financeDefaults.fx) / financeDefaults.fx * 0.45));
   const capex = f.capex * fxFactor;
   const revenue = 321 * scale * priceFactor * channelFactor;
   const channelWorkingCapitalPenalty = Math.max(0, f.b2cShare - 45) * 0.18;
-  const ebitda = Math.max(12, 79 * scale * priceFactor * channelFactor - rawPenalty - channelWorkingCapitalPenalty);
+  const ebitda = Math.max(12, 52 * scale * priceFactor * channelFactor - rawPenalty - channelWorkingCapitalPenalty);
   const payback = capex / ebitda;
   const debtPressure = f.loanRate > 16 ? (f.loanRate - 16) * 0.025 : 0;
   const dscr = Math.max(0.8, 1.72 - debtPressure - Math.max(0, f.stage3Month - 14) * 0.025 + (f.vendorDelay * 0.02) - channelWorkingCapitalPenalty * 0.003);
@@ -676,7 +688,7 @@ function sparkline(values, type = 'line') {
 
 function renderFinanceOutput() {
   const result = calculateFinance();
-  const years = [0.18, 0.46, 0.74, 1, 1.12].map((factor) => Math.round(result.revenue * factor));
+  const years = [0.22, 0.58, 1, 1.08, 1.16].map((factor) => Math.round(result.revenue * factor));
   const cashflow = [-result.capex * 0.18, -result.liquidityNeed * 0.28, result.ebitda * 0.18, result.ebitda * 0.52, result.ebitda * 0.9, result.ebitda * 1.08];
 
   $('#scenarioCards').innerHTML = [
@@ -728,6 +740,17 @@ function updateFinanceOutputs() {
 }
 
 function renderMarkets() {
+  const signalTarget = $('#marketSignals');
+  if (signalTarget) {
+    signalTarget.innerHTML = marketSignals.map((item) => `
+      <article class="evidence-card">
+        <span>${escapeHtml(item.title)}</span>
+        <strong>${escapeHtml(item.value)}</strong>
+        <p>${escapeHtml(item.text)}</p>
+      </article>
+    `).join('');
+  }
+
   $('#marketGrid').innerHTML = markets.map((item) => `
     <article class="market-card">
       ${icon('market')}
@@ -740,6 +763,17 @@ function renderMarkets() {
       </dl>
     </article>
   `).join('');
+
+  const complianceTarget = $('#complianceLanes');
+  if (complianceTarget) {
+    complianceTarget.innerHTML = complianceLanes.map((item) => `
+      <article class="compliance-card">
+        ${icon('quality')}
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.text)}</p>
+      </article>
+    `).join('');
+  }
 }
 
 function renderProducts() {
@@ -809,6 +843,17 @@ function renderCare() {
 }
 
 function renderGates() {
+  const readinessTarget = $('#readinessGrid');
+  if (readinessTarget) {
+    readinessTarget.innerHTML = readinessLanes.map((item) => `
+      <article class="readiness-card">
+        <span>${escapeHtml(item.status)}</span>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.items.join(' · '))}</p>
+      </article>
+    `).join('');
+  }
+
   $('#gateList').innerHTML = gates.map((item) => `
     <article class="gate-card" data-priority="${item.status}">
       ${icon('gate')}
@@ -817,6 +862,19 @@ function renderGates() {
         <p>${escapeHtml(item.note)}</p>
       </div>
       <span>${escapeHtml(GATE_STATUS_LABELS[item.status] ?? item.status)}</span>
+    </article>
+  `).join('');
+}
+
+function renderSiteConstraints() {
+  const target = $('#siteConstraints');
+  if (!target) return;
+
+  target.innerHTML = siteConstraints.map((item) => `
+    <article class="constraint-card">
+      ${icon('factory')}
+      <h3>${escapeHtml(item.title)}</h3>
+      <p>${escapeHtml(item.text)}</p>
     </article>
   `).join('');
 }
@@ -850,6 +908,7 @@ function renderStaticSections() {
   renderSystemList();
   renderSystemDetail();
   renderEngineeringMedia();
+  renderSiteConstraints();
   renderEquipmentTable();
   renderSimulator();
   renderFinancePresets();

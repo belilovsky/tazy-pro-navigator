@@ -662,6 +662,10 @@ img {
   border-color: color-mix(in srgb, var(--color-blue) 28%, var(--color-border));
 }
 
+.constructor-lane[data-accent="green"] {
+  border-color: color-mix(in srgb, var(--color-green) 28%, var(--color-border));
+}
+
 .constructor-lane__head {
   display: flex;
   align-items: flex-start;
@@ -989,6 +993,10 @@ img {
 
 .kpi-card,
 .scenario-card,
+.evidence-card,
+.compliance-card,
+.constraint-card,
+.readiness-card,
 .market-card,
 .product-card,
 .document-card,
@@ -1774,6 +1782,10 @@ img {
 }
 
 .market-grid,
+.evidence-grid,
+.compliance-grid,
+.constraint-grid,
+.readiness-grid,
 .product-grid,
 .document-room,
 .gate-list,
@@ -1784,6 +1796,10 @@ img {
 }
 
 .market-card,
+.evidence-card,
+.compliance-card,
+.constraint-card,
+.readiness-card,
 .product-card,
 .document-card,
 .care-node {
@@ -1793,6 +1809,9 @@ img {
 }
 
 .market-card h3,
+.compliance-card h3,
+.constraint-card h3,
+.readiness-card h3,
 .product-card h3,
 .document-card h3,
 .gate-card h3,
@@ -1801,6 +1820,62 @@ img {
   margin: 0;
   font-size: 18px;
   line-height: 1.2;
+}
+
+.evidence-card span,
+.readiness-card span {
+  color: var(--color-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.evidence-card strong {
+  color: var(--color-brand);
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.evidence-card p,
+.compliance-card p,
+.constraint-card p,
+.readiness-card p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.compliance-grid,
+.constraint-grid,
+.readiness-grid {
+  margin-top: 12px;
+}
+
+.constraint-grid,
+.readiness-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.compliance-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.compliance-card,
+.constraint-card {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+}
+
+.compliance-card h3,
+.constraint-card h3 {
+  grid-column: 2;
+}
+
+.compliance-card p,
+.constraint-card p {
+  grid-column: 2;
 }
 
 .icon {
@@ -2060,6 +2135,10 @@ dd {
   }
 
   .market-grid,
+  .evidence-grid,
+  .compliance-grid,
+  .constraint-grid,
+  .readiness-grid,
   .product-grid,
   .document-room,
   .care-flow,
@@ -2303,6 +2382,10 @@ dd {
   .system-list,
   .preset-list,
   .market-grid,
+  .evidence-grid,
+  .compliance-grid,
+  .constraint-grid,
+  .readiness-grid,
   .product-grid,
   .document-room,
   .gate-list,
