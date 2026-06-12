@@ -26,7 +26,8 @@ for (const width of widths) {
     if (message.type() === 'error') errors.push(message.text());
   });
 
-  await page.goto(target, { waitUntil: 'networkidle' });
+  await page.goto(target, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#marketSignals .evidence-card');
   await page.screenshot({ path: `/tmp/tazy-pro-navigator-${width}.png`, fullPage: false });
 
   const initialMetrics = await page.evaluate(() => ({
