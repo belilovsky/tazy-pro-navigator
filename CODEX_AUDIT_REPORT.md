@@ -125,4 +125,44 @@
 - `scripts/static-check.mjs`: обязательные ассеты обновлены под WebP-набор и OG PNG.
 
 ### Известные ограничения
-- На `1024px` навигация всё ещё использует двухколоночный sticky-layout высотой около 342px. Это не ломает overflow и подходит для tablet, но при отдельной задаче можно сделать tablet-rail компактнее.
+- Блокирующих визуальных ограничений по проверенным брейкпоинтам не осталось. Следующий качественный слой — не исправление поломки, а продуктовая работа: реальные документы data room, отдельная PDF/инвесторская презентация и закрытый доступ.
+
+## 7. Продовый проход 2026-06-13
+### Проверено
+- Локальные проверки:
+  - `./scripts/check.sh`;
+  - `node scripts/build-static.mjs`;
+  - `node scripts/browser-smoke.mjs` на `375, 390, 768, 1024, 1440, 1920`.
+- Live-проверка:
+  - `./scripts/verify-live.sh` против `https://tazy.pro/`;
+  - HTTP/2 200;
+  - CSP согласован с qdev public analytics suite;
+  - live HTML использует свежий release token `20260613-nav2`.
+- Быстрый DOM/a11y sanity-check:
+  - ровно один `<h1>`;
+  - нет пропущенной иерархии заголовков;
+  - нет unnamed buttons/links;
+  - у всех изображений есть `alt`;
+  - duplicate `id` не обнаружены.
+
+### Найдено
+- На tablet-ширинах `768/1024px` верхняя навигация визуально уходила вправо как горизонтальная лента. Страница не получала общий horizontal overflow, но часть пунктов была за пределами текущего viewport.
+- На мобильной ширине `375px` compact stage-tabs в блоке «Карта стоимости» могли визуально обрезать подпись «Полный цикл».
+- Cache-busting token оставался `20260612-sections3` после новых CSS/JS-изменений.
+
+### Исправлено
+- `styles.css`:
+  - навигация на `<=1040px` переведена с горизонтального scroll-rail на переносимые компактные chips;
+  - compact segmented controls на `<=720px` теперь переносятся и не клипают длинные подписи.
+- `scripts/browser-smoke.mjs`:
+  - добавлена проверка `offscreenNavLinks === 0`, чтобы ловить пункты навигации, которые уходят за viewport без общего page overflow.
+- `scripts/check.sh`:
+  - современный `tidy` теперь делает HTML validation строгой: найденные ошибки валят check.
+- `index.html`, `src/app.js`, `scripts/static-check.mjs`:
+  - release token обновлён до `20260613-nav2`.
+
+### Production state
+- GitHub `main`: `abdf50a chore(release): refresh navigator asset token`.
+- Последний UI-fix: `c6c8609 fix(ui): prevent tablet navigation clipping`.
+- VPS release после деплоя: `/var/www/tazy.pro/releases/20260613T021057Z`.
+- `verify-live: ok https://tazy.pro/`.
