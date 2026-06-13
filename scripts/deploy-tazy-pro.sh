@@ -10,7 +10,7 @@ LOCAL_DIST="dist/tazy-pro-navigator/"
 cd "$(dirname "$0")/.."
 
 ./scripts/check.sh
-TAZY_ROBOTS="${TAZY_ROBOTS:-private}" node scripts/build-static.mjs
+node scripts/build-static.mjs
 
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$REMOTE_HOST" \
   "set -e; mkdir -p '$REMOTE_RELEASE' '${REMOTE_BASE}/releases' '${REMOTE_BASE}/shared'"

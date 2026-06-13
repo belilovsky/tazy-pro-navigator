@@ -7,6 +7,10 @@ PLAYWRIGHT_MODULE="${PLAYWRIGHT_MODULE:-}"
 curl -fsSI "$URL" | grep -E '^HTTP/|^content-security-policy:|^x-frame-options:|^x-content-type-options:|^referrer-policy:' -i
 curl -fsSL "$URL" | grep -q 'TAZY.PRO — навигатор проекта'
 curl -fsSL "$URL" | grep -q 'https://tazy.pro/assets/generated/overview-og.jpg'
+if curl -fsSL "$URL" | grep -qi 'noindex'; then
+  echo "verify-live: root HTML still contains noindex" >&2
+  exit 1
+fi
 if curl -fsSL "$URL" | grep -q 'https://tazy.pro/assets/generated/overview-hero.png'; then
   echo "verify-live: stale Open Graph image points to overview-hero.png" >&2
   exit 1
@@ -15,7 +19,10 @@ manifest_body="$(curl -fsSL "${URL%/}/manifest.webmanifest")"
 printf '%s\n' "$manifest_body" | grep -q '"id": "https://tazy.pro/"'
 printf '%s\n' "$manifest_body" | grep -q '"/assets/icons/icon-192.png"'
 printf '%s\n' "$manifest_body" | grep -q '"/assets/icons/icon-512.png"'
-curl -fsSL "${URL%/}/robots.txt" | grep -q 'Disallow: /'
+robots_body="$(curl -fsSL "${URL%/}/robots.txt")"
+printf '%s\n' "$robots_body" | grep -q 'Allow: /'
+printf '%s\n' "$robots_body" | grep -q 'Sitemap: https://tazy.pro/sitemap.xml'
+curl -fsSL "${URL%/}/sitemap.xml" | grep -q '<loc>https://tazy.pro/</loc>'
 
 og_headers="$(curl -fsSI "${URL%/}/assets/generated/overview-og.jpg")"
 printf '%s\n' "$og_headers" | grep -E '^HTTP/|^content-type:|^content-length:' -i

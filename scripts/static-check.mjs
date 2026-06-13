@@ -127,6 +127,9 @@ if (!appJs.includes(`./data.js?v=${releaseToken}`)) {
 if (!indexHtml.includes('https://tazy.pro/assets/generated/overview-og.jpg')) {
   errors.push('index.html should use the optimized overview-og.jpg for Open Graph');
 }
+if (!indexHtml.includes('<meta name="robots" content="index, follow">')) {
+  errors.push('index.html should stay publicly indexable for the tazy.pro domain');
+}
 if (!indexHtml.includes('property="og:image:width" content="1200"')) {
   errors.push('index.html should expose Open Graph image width');
 }

@@ -38,32 +38,24 @@ for (const asset of generatedAssets) {
 
 await writeFile(
   join(outDir, 'robots.txt'),
-  process.env.TAZY_ROBOTS === 'public'
-    ? [
-      'User-agent: *',
-      'Allow: /',
-      '',
-      'Sitemap: https://tazy.pro/sitemap.xml',
-      ''
-    ].join('\n')
-    : [
-      'User-agent: *',
-      'Disallow: /',
-      ''
-    ].join('\n')
+  [
+    'User-agent: *',
+    'Allow: /',
+    '',
+    'Sitemap: https://tazy.pro/sitemap.xml',
+    ''
+  ].join('\n')
 );
 
-if (process.env.TAZY_ROBOTS === 'public') {
-  await writeFile(
-    join(outDir, 'sitemap.xml'),
-    [
-      '<?xml version="1.0" encoding="UTF-8"?>',
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-      '  <url><loc>https://tazy.pro/</loc></url>',
-      '</urlset>',
-      ''
-    ].join('\n')
-  );
-}
+await writeFile(
+  join(outDir, 'sitemap.xml'),
+  [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    '  <url><loc>https://tazy.pro/</loc></url>',
+    '</urlset>',
+    ''
+  ].join('\n')
+);
 
 console.log(`build-static: ${outDir}`);
