@@ -12,7 +12,7 @@ const files = [
 ];
 
 const generatedAssets = [
-  'overview-hero.png',
+  'overview-og.jpg',
   'factory-cutaway.webp',
   'production-chain.webp',
   'engineering-plan.webp',

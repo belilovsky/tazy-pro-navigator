@@ -84,12 +84,12 @@
 - Отдельно проверено в in-app browser:
   - `http://127.0.0.1:4181/` открывается без console errors/warnings;
   - на странице ровно один `<h1>`;
-  - `og:image` указывает на `assets/generated/overview-hero.png`;
+  - `og:image` указывает на `assets/generated/overview-og.jpg`;
   - производственные и инженерные блоки используют только новые изображения.
 
 ### Исправлено
 - `index.html`:
-  - `og:image` переведён на `assets/generated/overview-hero.png`;
+  - `og:image` переведён на `assets/generated/overview-og.jpg`;
   - блоки `Завод` и `Инженерия` переведены на `factory-cutaway.webp` и `engineering-plan.webp` из `assets/generated/`.
 - `src/app.js`:
   - референс цепочки переведён на `assets/generated/production-chain.webp`.
@@ -122,7 +122,7 @@
 - `styles.css`: добавлен единый `.section-visual` с desktop/mobile-поведением; на мобильном подпись уходит под картинку и не перекрывает важные детали.
 - `styles.css`: мобильная навигация на `<=720px` переведена из высокой двухколоночной сетки в компактный горизонтальный rail.
 - `src/app.js`: scroll-spy заменён на детерминированный расчёт по позиции секций; активный пункт навигации теперь корректен для длинных нижних разделов.
-- `scripts/static-check.mjs`: обязательные ассеты обновлены под WebP-набор и OG PNG.
+- `scripts/static-check.mjs`: обязательные ассеты обновлены под WebP-набор и оптимизированный OG JPEG.
 
 ### Известные ограничения
 - Блокирующих визуальных ограничений по проверенным брейкпоинтам не осталось. Следующий качественный слой — не исправление поломки, а продуктовая работа: реальные документы data room, отдельная PDF/инвесторская презентация и закрытый доступ.
@@ -166,3 +166,29 @@
 - Последний UI-fix: `c6c8609 fix(ui): prevent tablet navigation clipping`.
 - VPS release после деплоя: `/var/www/tazy.pro/releases/20260613T021057Z`.
 - `verify-live: ok https://tazy.pro/`.
+
+## 8. Open Graph и вес production bundle
+### Проверено
+- Состав `dist/tazy-pro-navigator/assets/generated`.
+- Размеры и габариты OG-изображения.
+- Наличие `og:image`, `og:image:width`, `og:image:height`, `og:image:type`, `twitter:card` и `twitter:image`.
+
+### Найдено
+- В production bundle попадал `overview-hero.png` размером около 2.0 МБ только ради Open Graph. Видимая страница использует WebP, поэтому PNG был избыточен для live release.
+
+### Исправлено
+- Добавлен отдельный `assets/generated/overview-og.jpg`:
+  - размер: 1200×675;
+  - вес: около 192 КБ;
+  - формат: progressive JPEG.
+- `index.html`:
+  - Open Graph и Twitter/X preview переведены на `overview-og.jpg`;
+  - добавлены явные размеры и MIME type.
+- `scripts/build-static.mjs`:
+  - production whitelist больше не копирует тяжёлый `overview-hero.png`;
+  - в release попадает только `overview-og.jpg` плюс WebP-ассеты страницы.
+- `scripts/static-check.mjs`:
+  - проверяет наличие оптимизированного OG-изображения и обязательных social meta.
+
+### Результат
+- Production image payload уменьшен примерно на 1.8 МБ без изменения видимого интерфейса.

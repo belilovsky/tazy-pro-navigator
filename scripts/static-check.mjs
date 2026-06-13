@@ -1,4 +1,4 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, stat } from 'node:fs/promises';
 import {
   audiences,
   complianceLanes,
@@ -24,7 +24,7 @@ import {
 
 const requiredAssets = [
   'manifest.webmanifest',
-  'assets/generated/overview-hero.png',
+  'assets/generated/overview-og.jpg',
   'assets/generated/factory-cutaway.webp',
   'assets/generated/production-chain.webp',
   'assets/generated/engineering-plan.webp',
@@ -120,6 +120,19 @@ if (!indexHtml.includes(`./src/app.js?v=${releaseToken}`)) {
 }
 if (!appJs.includes(`./data.js?v=${releaseToken}`)) {
   errors.push(`src/app.js should cache-bust data.js with ${releaseToken}`);
+}
+if (!indexHtml.includes('https://tazy.pro/assets/generated/overview-og.jpg')) {
+  errors.push('index.html should use the optimized overview-og.jpg for Open Graph');
+}
+if (!indexHtml.includes('property="og:image:width" content="1200"')) {
+  errors.push('index.html should expose Open Graph image width');
+}
+if (!indexHtml.includes('name="twitter:card" content="summary_large_image"')) {
+  errors.push('index.html should expose Twitter/X large summary card metadata');
+}
+const ogImageStats = await stat('assets/generated/overview-og.jpg');
+if (ogImageStats.size > 350 * 1024) {
+  errors.push('Open Graph image should stay below 350 KB');
 }
 
 if (errors.length) {
