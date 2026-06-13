@@ -83,7 +83,12 @@ for (const width of widths) {
     chainReferenceOpen: document.querySelector('.reference-toggle')?.open || false,
     moduleCount: document.querySelectorAll('.chain-chip').length,
     h1Count: document.querySelectorAll('h1').length,
-    navActive: document.querySelectorAll('[data-nav-link].is-active').length
+    navActive: document.querySelectorAll('[data-nav-link].is-active').length,
+    offscreenNavLinks: Array.from(document.querySelectorAll('[data-nav-link]'))
+      .filter((link) => {
+        const rect = link.getBoundingClientRect();
+        return rect.left < -1 || rect.right > document.documentElement.clientWidth + 1;
+      }).length
   }));
   metrics.financeNavTop = financeNavTop;
 
@@ -105,6 +110,7 @@ const failed = results.some((item) =>
   item.initialMetrics.baseEbitda !== '46 млн ₸' ||
   item.initialMetrics.basePayback !== '3,5 года' ||
   item.metrics.navActive !== 1 ||
+  item.metrics.offscreenNavLinks !== 0 ||
   item.metrics.h1Count !== 1 ||
   (item.width <= 390 && (item.metrics.financeNavTop === null || item.metrics.financeNavTop > 120)) ||
   item.metrics.stageActive !== 'stage2' ||

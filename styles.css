@@ -2202,13 +2202,12 @@ dd {
 
   .side-nav {
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: visible;
     width: 100%;
-    padding-bottom: 4px;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
+    padding-bottom: 0;
+    scroll-snap-type: none;
   }
 
   .side-nav::-webkit-scrollbar {
@@ -2216,14 +2215,15 @@ dd {
   }
 
   .side-nav__link {
-    flex: 0 0 auto;
+    flex: 1 1 max(118px, calc((100% - 36px) / 7));
     grid-template-columns: auto;
-    width: auto;
-    min-width: max-content;
+    justify-content: center;
+    min-width: 0;
     min-height: 34px;
-    padding: 7px 12px;
+    padding: 7px 10px;
     max-width: 100%;
     scroll-snap-align: start;
+    text-align: center;
   }
 
   .side-nav__link span:last-child {
@@ -2231,7 +2231,7 @@ dd {
     font-size: 14px;
     line-height: 1.15;
     text-overflow: clip;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .side-nav__number {
@@ -2318,6 +2318,17 @@ dd {
   .topbar__location,
   .section-kicker {
     font-size: 10px;
+  }
+
+  .segmented--compact {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .segmented--compact .segment {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+    white-space: normal;
   }
 
   .audience-strip {
