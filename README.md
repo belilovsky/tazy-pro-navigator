@@ -41,6 +41,7 @@ PLAYWRIGHT_MODULE=/absolute/path/to/node_modules/playwright/index.js ./scripts/v
 - `src/data.js` — проектные данные и справочники.
 - `src/app.js` — render/state/interactions.
 - `assets/generated/` — рабочие визуальные ассеты, сгенерированные через `gpt image 2`; WebP используется на странице, PNG сохранены в репо как исходники, отдельный `overview-og.jpg` используется для Open Graph.
+- `assets/icons/` — PNG-иконки для iOS/PWA install surfaces.
 - `assets/drafts/` — сохранённые ранние зарисовки и исторические референсы.
 - `docs/product-brief.md` — решение по границам продукта и следующим шагам.
 - `docs/deploy-readiness.md` — что готово к деплою и что решается после выбора домена.

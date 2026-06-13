@@ -192,3 +192,22 @@
 
 ### Результат
 - Production image payload уменьшен примерно на 1.8 МБ без изменения видимого интерфейса.
+
+## 9. Manifest и install icons
+### Проверено
+- `manifest.webmanifest`.
+- `index.html` touch icon linkage.
+- Состав production build.
+
+### Найдено
+- Manifest использовал только SVG favicon. Для iOS/Android install surfaces и некоторых системных превью лучше иметь PNG-иконки фиксированных размеров.
+
+### Исправлено
+- Добавлены PNG-иконки:
+  - `assets/icons/apple-touch-icon.png` — 180×180;
+  - `assets/icons/icon-192.png` — 192×192;
+  - `assets/icons/icon-512.png` — 512×512.
+- `index.html` подключает `apple-touch-icon`.
+- `manifest.webmanifest` содержит PNG-иконки `192x192` и `512x512` с `purpose: any maskable`.
+- `scripts/build-static.mjs` копирует `assets/icons`.
+- `scripts/static-check.mjs` проверяет наличие touch icon и manifest PNG icons.

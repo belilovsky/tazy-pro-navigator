@@ -24,6 +24,9 @@ import {
 
 const requiredAssets = [
   'manifest.webmanifest',
+  'assets/icons/apple-touch-icon.png',
+  'assets/icons/icon-192.png',
+  'assets/icons/icon-512.png',
   'assets/generated/overview-og.jpg',
   'assets/generated/factory-cutaway.webp',
   'assets/generated/production-chain.webp',
@@ -129,6 +132,17 @@ if (!indexHtml.includes('property="og:image:width" content="1200"')) {
 }
 if (!indexHtml.includes('name="twitter:card" content="summary_large_image"')) {
   errors.push('index.html should expose Twitter/X large summary card metadata');
+}
+if (!indexHtml.includes('rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png"')) {
+  errors.push('index.html should expose an Apple touch icon');
+}
+if (!indexHtml.includes('<link rel="manifest" href="./manifest.webmanifest">')) {
+  errors.push('index.html should link the web manifest');
+}
+const manifestJson = JSON.parse(await readFile('manifest.webmanifest', 'utf8'));
+const iconSizes = new Set((manifestJson.icons ?? []).map((icon) => icon.sizes));
+if (!iconSizes.has('192x192') || !iconSizes.has('512x512')) {
+  errors.push('manifest should expose 192x192 and 512x512 PNG icons');
 }
 const ogImageStats = await stat('assets/generated/overview-og.jpg');
 if (ogImageStats.size > 350 * 1024) {

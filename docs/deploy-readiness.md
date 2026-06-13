@@ -11,6 +11,7 @@
 - Smoke-проверка desktop/tablet/mobile вынесена в `scripts/browser-smoke.mjs`.
 - Smoke проверяет режим аудитории, выбор этапа и модуля, финансовый сценарий и отсутствие горизонтального overflow.
 - Рабочие визуальные ассеты лежат в `assets/generated/`: страница использует WebP, PNG сохранены как исходники, Open Graph использует оптимизированный `overview-og.jpg`.
+- Manifest включает SVG favicon и PNG-иконки `192x192`/`512x512`; `index.html` подключает `apple-touch-icon`.
 - Статическая сборка в `dist/tazy-pro-navigator`.
 - Пример nginx basic auth + CSP: `ops/nginx-basic-auth.conf.example`.
 - Deploy-скрипт для текущего VPS: `scripts/deploy-tazy-pro.sh`.
